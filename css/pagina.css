@@ -750,6 +750,20 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
   text-transform: uppercase; color: var(--gn-sombra);
   border: 1px dashed var(--gn-sombra); padding: 3px 8px; border-radius: var(--raio);
 }
+/* Selo de verificado: pequeno e sem cor de ação, para não competir com o
+   "Abrir". É informação da plataforma, não botão. */
+.canal-selo {
+  font-size: .64rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; background: var(--gn-acao); padding: 3px 7px; border-radius: var(--raio);
+  align-self: center;
+}
+/* Público na linha inteira, com a data em itálico apagado ao lado. A data é
+   parte do número, então anda junto e nunca fica menor a ponto de sumir. */
+.canal-publico {
+  flex-basis: 100%; font-family: var(--f-t); font-size: .9rem; color: var(--gn-tinta);
+}
+.canal-publico i { font-style: italic; color: var(--gn-sombra); }
+
 /* O motivo ocupa a linha inteira embaixo: em telas estreitas ele é o que
    sobra, e espremê-lo ao lado do rótulo o cortaria. */
 .canal-porque {
@@ -1133,6 +1147,31 @@ a:focus-visible, button:focus-visible, input:focus-visible {
    2. Os três números ficam em três colunas até 720px. "109.025" em 3,35rem
       mede mais do que a coluna, e item de grid tem min-width:auto — a faixa
       inteira estica em vez de quebrar. Empilham a partir de 1080px. */
+/* CABEÇALHO ACIMA DE 1080px — os dez pixels que faltavam.
+   Acima de 1080 a barra vira uma linha só: logo + menu + botão. Com max-width
+   1200px e gap de 40px entre os três blocos, sobravam 653px para um menu que
+   pedia 663. Como os links estavam com white-space normal, quem cedeu foi a
+   palavra: "Sua cidade" e "Quem é" quebravam em duas linhas e o botão virava
+   "Entrar no / grupo".
+   Os nomes já haviam sido encurtados uma vez ("Compromissos" → "Pautas",
+   "Divulgar" → "Material") e a folga continuou negativa: encurtar texto não
+   resolve falta de espaço, adia. Aqui se devolve espaço de verdade.
+   Não apareceu na máquina de desenvolvimento porque a janela ali tinha ~980px,
+   onde a barra já empilha: o defeito mora só na faixa larga, e por isso saiu
+   na publicação e não antes. */
+@media (min-width: 1081px) {
+  .bar { gap: 12px 28px; }                        /* era 40px nos três vãos */
+  .bar .logo, .bar .zap { flex: 0 0 auto; white-space: nowrap; }
+  .bar nav { flex: 1 1 auto; min-width: 0; gap: 20px; justify-content: flex-end; }
+  .bar nav a { white-space: nowrap; }             /* a palavra nunca quebra */
+}
+/* faixa apertada, entre a virada e a largura confortável */
+@media (min-width: 1081px) and (max-width: 1260px) {
+  .bar { padding-inline: 24px; }
+  .bar nav { gap: 14px; }
+  .bar nav a { font-size: .82rem; }
+}
+
 @media (max-width: 1080px) {
   .painel .grupos { grid-template-columns: 1fr; }
 

@@ -42,6 +42,9 @@ header{position:sticky;top:0;z-index:9;background:var(--gn-papel);border-bottom:
 .bar{max-width:var(--max);margin:0 auto;padding:0 var(--e-4);height:74px;display:flex;align-items:center;gap:var(--e-4)}
 .logo{display:flex;align-items:center;gap:12px}
 .logo .nome{font-stretch:var(--w-marca);font-weight:800;font-size:1.32rem;letter-spacing:-.015em;text-transform:uppercase}
+/* lockup oficial no lugar do nome desenhado em fonte. Altura fixa e largura
+   automatica: a razao do recorte e 3.098:1 e quem manda e a altura da barra. */
+.logo .marca{display:block;height:44px;width:auto;border-radius:var(--raio)}
 .selo{background:var(--gn-ocre);color:#fff;font-stretch:var(--w-marca);font-weight:800;font-size:1.02rem;letter-spacing:.04em;padding:7px 11px 6px;border-radius:var(--raio)}
 nav{margin-left:auto;display:flex;gap:26px;font-size:.86rem;font-weight:500}
 nav a{padding-bottom:3px;border-bottom:2px solid transparent}

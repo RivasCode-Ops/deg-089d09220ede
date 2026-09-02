@@ -672,6 +672,13 @@
       var li = el('li');
       var nome = el('b', null, c.rotulo);
       li.appendChild(nome);
+      /* selo de conta verificada: fato do perfil, não elogio. Só aparece onde
+         a plataforma de fato carimbou. */
+      if (c.verificado) {
+        var v = el('span', 'canal-selo', 'verificado');
+        v.title = 'Conta verificada pela plataforma';
+        li.appendChild(v);
+      }
       if (c.arroba) { li.appendChild(el('span', 'arroba', c.arroba)); }
 
       if (c.url) {
@@ -690,6 +697,15 @@
         li.appendChild(off);
         li.appendChild(el('span', 'canal-porque', c.pendencia));
       }
+      /* Público sempre com a data da leitura colada nele. Seguidor sobe e
+         desce; número sem data é número que mente sozinho daqui a um mês. */
+      if (c.publico) {
+        var pb = el('span', 'canal-publico', c.publico);
+        if (c.lidoEm) { pb.appendChild(el('i', null, ' · leitura de ' + c.lidoEm)); }
+        li.appendChild(pb);
+      }
+      if (c.descricao) { li.appendChild(el('span', 'canal-porque', c.descricao)); }
+
       alvo.appendChild(li);
     });
   }

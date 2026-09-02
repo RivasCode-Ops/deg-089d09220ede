@@ -279,8 +279,11 @@
       { id: 'lockup', titulo: 'Logotipo em vetor',
         formato: 'SVG ou AI',
         descricao: 'O lockup fechado, para peça impressa e para arte de terceiro.',
-        pendencia: 'Pendência 1.4 — o arquivo de marca não veio do designer. Hoje o nome no topo ' +
-                   'do site é desenhado em fonte, o que serve para tela e não serve para impressão.' },
+        pendencia: 'Pendência 1.4 — chegou em 02/09/2026 o lockup em bitmap (1535×688) e ele já ' +
+                   'está no topo do site, recortado por medida para 273×88. Falta a versão em ' +
+                   'vetor: bitmap serve para tela e não serve para impressão. Junto disso, uma ' +
+                   'divergência a resolver — a placa do lockup é #034A66, um azul-petróleo que ' +
+                   'não está na paleta lida das peças (#001787). Qual das duas é a cor de marca?' },
       { id: 'cartao-link', titulo: 'Cartão de link para WhatsApp',
         formato: 'JPG 1200×630',
         descricao: 'A imagem que aparece quando alguém cola o endereço do site numa conversa.',
@@ -356,9 +359,29 @@
       ]
     },
 
+    /* CANAIS. Os números de público saíram da leitura do próprio perfil em
+       02/09/2026 — etiqueta 'observado', com a data ao lado na tela, porque
+       seguidor é número que anda: publicado sem data envelhece calado e vira
+       mentira em três meses. O Threads entra com o handle que está no perfil
+       e SEM url: o endereço seria derivado, não visto, e derivado não vira
+       link nesta página. Nem o linkme nem o Threads respondem a robô (403 e
+       bloqueio), então nada aqui foi confirmado por requisição — só lido. */
     canais: [
       { id: 'whatsapp',  rotulo: 'Entrar no grupo', url: null, pendencia: 'Link do grupo de WhatsApp não fornecido.' },
-      { id: 'instagram', rotulo: 'Instagram', arroba: '@georgianoneto', url: 'https://www.instagram.com/georgianoneto/' },
+      { id: 'instagram', rotulo: 'Instagram', arroba: '@georgianoneto',
+        url: 'https://www.instagram.com/georgianoneto/',
+        verificado: true,
+        publico: '104 mil seguidores · 7.610 publicações',
+        lidoEm: '02/09/2026',
+        fonte: { nome: 'Perfil no Instagram', url: 'https://www.instagram.com/georgianoneto/' },
+        etiqueta: 'observado' },
+      { id: 'linkme',    rotulo: 'Todos os links', arroba: 'linkme.bio/georgianoneto',
+        url: 'https://linkme.bio/georgianoneto',
+        descricao: 'A página de links que o perfil do Instagram aponta na bio.',
+        fonte: { nome: 'Bio do perfil no Instagram', url: 'https://www.instagram.com/georgianoneto/' },
+        etiqueta: 'observado' },
+      { id: 'threads',   rotulo: 'Threads', arroba: 'georgianoneto', url: null,
+        pendencia: 'O handle está no perfil do Instagram, mas o endereço do Threads seria montado por mim, não visto. Confirmar e colar a URL.' },
       { id: 'facebook',  rotulo: 'Facebook',  url: null, pendencia: 'URL não fornecida.' },
       { id: 'youtube',   rotulo: 'YouTube',   url: null, pendencia: 'URL não fornecida.' }
     ],
@@ -378,8 +401,9 @@
       { grau: 'corrigir', item: 'Foto de máquina, de saúde e de água — não existem no acervo', trava: 'Três dos seis cartões de entrega ficam sem rosto' },
       { grau: 'corrigir', item: 'OG image exportada para arquivo local',             trava: 'Link compartilhado no WhatsApp sai sem cartão' },
       { grau: 'corrigir', item: 'Foto própria das obras de Jaicós e Padre Marcos',    trava: 'Quatro cartões dividem a mesma imagem de carreata' },
-      { grau: 'corrigir', item: 'Arquivo de marca do designer (paleta e lockup)',    trava: 'Os hex da folha são leitura visual das peças, não guia de marca' },
-      { grau: 'corrigir', item: 'Link do grupo de WhatsApp, Facebook e YouTube',     trava: 'Botão do topo e coluna do rodapé' }
+      { grau: 'corrigir', item: 'Marca em vetor — o lockup raster chegou em 02/09/2026 e já está no topo; falta a versão vetorial e a paleta oficial', trava: 'Impressão de material · os hex da folha seguem sendo leitura visual das peças' },
+      { grau: 'corrigir', item: 'Link do grupo de WhatsApp, Facebook, YouTube e Threads', trava: 'Botão do topo e coluna do rodapé' },
+      { grau: 'corrigir', item: 'Reler os números do Instagram antes de publicar — 104 mil seguidores e 7.610 publicações são leitura de 02/09/2026 e andam sozinhos', trava: 'Linha de público no cartão do Instagram' }
     ]
   };
 

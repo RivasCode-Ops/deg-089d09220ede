@@ -132,8 +132,67 @@
   border-color: var(--gn-acao); color: var(--gn-acao);
 }
 
-.pergunte-saida:empty { display: none; }
-.pergunte-saida { margin-top: var(--e-3); }
+/* O aviso de identidade não some e não fecha: quem chega no meio da conversa
+   tem de saber com o que está falando sem rolar para achar. */
+.pergunte-aviso {
+  font-family: var(--f-t); font-size: .88rem; line-height: 1.5; color: #223448;
+  background: var(--gn-gelo); border-left: 3px solid var(--gn-acao);
+  padding: 12px 15px; margin-bottom: 16px;
+}
+.pergunte-aviso b { font-family: var(--f-d); font-weight: 700; color: var(--gn-azul-texto); }
+
+.pergunte-caixa {
+  background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);
+  padding: 20px; max-width: 82ch;
+}
+
+/* A conversa cresce até um teto e rola por dentro. Sem teto, cada pergunta
+   empurra o campo para fora da tela e a pessoa perde onde digitar. */
+.pergunte-corpo {
+  max-height: 30rem; overflow-y: auto; padding-right: 4px;
+  display: grid; gap: 14px; align-content: start;
+}
+
+.msg { max-width: 92%; }
+.msg-eu {
+  justify-self: end; background: var(--gn-azul); color: #fff;
+  padding: 11px 15px; border-radius: var(--raio);
+}
+.msg-eu p { font-family: var(--f-t); font-size: .95rem; line-height: 1.45; }
+.msg-bot {
+  justify-self: start; background: var(--gn-papel);
+  border: 1px solid var(--gn-linha); border-radius: var(--raio); padding: 16px 18px;
+}
+.msg-bot h5 {
+  font-stretch: var(--w-titulo); font-weight: 800; font-size: 1.06rem;
+  line-height: 1.15; margin-bottom: 9px;
+}
+.msg-bot > p { font-family: var(--f-t); font-size: .95rem; line-height: 1.55; color: #223448; }
+.msg-bot > p + p { margin-top: 9px; }
+
+/* "Não sei" é resposta de primeira classe, e por isso tem forma própria.
+   Assistente que esconde o que não sabe ensina a pessoa a confiar demais. */
+.msg-naosei { border-style: dashed; border-color: var(--gn-sombra); background: var(--gn-gelo); }
+.msg-naosei h5 { color: var(--gn-azul-texto); }
+
+.msg-item { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--gn-linha); }
+.msg-item b { display: block; font-stretch: var(--w-titulo); font-weight: 700; font-size: .98rem; }
+.msg-item p { font-family: var(--f-t); font-size: .89rem; line-height: 1.5; color: #223448; margin-top: 4px; }
+.msg-item a { color: var(--gn-acao); border-bottom: 1px solid currentColor; font-size: .9rem; }
+.msg-item .fonte { margin-top: 7px; }
+.msg-num {
+  display: inline-block; font-stretch: var(--w-display); font-weight: 800;
+  font-size: 1.4rem; line-height: 1; color: var(--gn-azul); margin-bottom: 3px;
+}
+
+/* A segunda metade da pergunta composta. Fica DENTRO da resposta, e não nos
+   chips do rodapé: nos chips ela viraria mais uma sugestão qualquer, e o que
+   se quer dizer é "eu vi que você perguntou isto também". */
+.msg-tambem {
+  margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--gn-sombra);
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+}
+.msg-tambem span { font-family: var(--f-t); font-size: .88rem; color: var(--gn-sombra); }
 
 .resp {
   background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);

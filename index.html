@@ -144,14 +144,21 @@
   </div>
 
   <div class="pergunte-caixa" id="pergunte-caixa">
+    <!-- Aviso de identidade fixo, no topo e sempre visível. Quem chega no meio
+         da conversa precisa saber com o que está falando sem ter de rolar. -->
+    <p class="pergunte-aviso">Assistente automático da página.
+      <b>Não é o Georgiano falando</b>, e não é inteligência artificial:
+      responde só o que está registrado aqui, sempre com a fonte.</p>
+
+    <div class="pergunte-corpo" id="pergunte-corpo" aria-live="polite"></div>
+    <div class="sug" id="pergunte-sug"></div>
+
     <div class="campo">
       <label class="sr" for="pergunte-campo" hidden>Sua pergunta</label>
       <input class="txt" id="pergunte-campo" type="search" autocomplete="off"
              placeholder="O que chegou na minha cidade?">
       <button class="go" id="pergunte-enviar" type="button">Perguntar</button>
     </div>
-    <div class="sug" id="pergunte-sug"></div>
-    <div class="pergunte-saida" id="pergunte-saida" aria-live="polite"></div>
   </div>
 </div></section>
 

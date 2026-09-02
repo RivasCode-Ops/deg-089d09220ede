@@ -27,7 +27,7 @@
 
 <link rel="stylesheet" href="css/fontes.css?v=7cfc8710">
 <link rel="stylesheet" href="css/base.css?v=78fc302d">
-<link rel="stylesheet" href="css/pagina.css?v=d8e6a088">
+<link rel="stylesheet" href="css/pagina.css?v=0d5ca1c9">
 </head>
 <body>
 
@@ -53,6 +53,7 @@
   <nav>
     <a class="on" href="#topo">Início</a>
     <a href="#cidade">Sua cidade</a>
+    <a href="#agenda">Agenda</a>
     <a href="#entregas-sec">Entregas</a>
     <a href="#quem">Quem é</a>
     <a href="#mandato">Mandato</a>
@@ -171,12 +172,29 @@
   </div>
 </div></section>
 
+<!-- 03 · AGENDA — o futuro, com estado no lugar da fonte.
+     A leitura da página fica: o que já chegou (passado, com fonte) → onde ele
+     vai estar (futuro, com estado) → o que ele promete (compromissos). -->
+<section class="sec agenda" id="agenda"><div class="wrap">
+  <div class="mark"><b>Onde ele vai estar</b><span>5555 · 03</span></div>
+  <div class="agenda-topo">
+    <h2>Agenda pública.<br>Dia, hora e lugar.</h2>
+    <p class="corpo">Compromisso sem hora ou sem local aparece como <b>previsto</b> — não como
+      confirmado. Cancelado fica na lista, com o motivo.</p>
+  </div>
+
+  <p id="agenda-aviso"></p>
+  <div class="sug" id="agenda-cidades"></div>
+  <div class="agenda-lista" id="agenda-lista"></div>
+  <div id="agenda-passados"></div>
+</div></section>
+
 <!-- C · NÚMEROS DE AUTORIDADE -->
 <section class="nums"><div class="wrap" id="nums"></div></section>
 
 <!-- D · ENTREGAS -->
 <section class="sec" id="entregas-sec"><div class="wrap">
-  <div class="mark"><b>O que chegou perto de você</b><span>5555 · 03</span></div>
+  <div class="mark"><b>O que chegou perto de você</b><span>5555 · 04</span></div>
   <div class="grid3" id="entregas"></div>
   <p class="entregas-nota" id="entregas-nota"></p>
 </div></section>
@@ -210,7 +228,7 @@
      pendência 3 dizia "não há seção porque não há o dado". Tudo aqui sai de
      dados/campanha.js → mandato, e cada número carrega a fonte. -->
 <section class="sec mandato" id="mandato"><div class="wrap">
-  <div class="mark"><b>O que ele fez na Assembleia</b><span>5555 · 04</span></div>
+  <div class="mark"><b>O que ele fez na Assembleia</b><span>5555 · 05</span></div>
   <div class="mandato-topo">
     <h2>Três mandatos.<br>O que virou lei.</h2>
     <p class="corpo" id="mandato-intro"></p>
@@ -221,7 +239,7 @@
 
 <!-- F · COMPROMISSOS (as cinco pautas nomeadas) -->
 <section class="sec metas" id="compromissos"><div class="wrap">
-  <div class="mark"><b>Compromissos 2027 — 2031</b><span>5555 · 05</span></div>
+  <div class="mark"><b>Compromissos 2027 — 2031</b><span>5555 · 06</span></div>
   <h2>Cinco pautas.<br>Com nome.</h2>
   <div id="pautas"></div>
 </div></section>
@@ -277,7 +295,7 @@
      'materiais' e 'canais'. Material sem arquivo vira cartão que diz o que
      falta, nunca botão que não baixa. -->
 <section class="sec divulgar" id="divulgar"><div class="wrap">
-  <div class="mark"><b>Leve o 5555 com você</b><span>5555 · 06</span></div>
+  <div class="mark"><b>Leve o 5555 com você</b><span>5555 · 07</span></div>
 
   <h2>Material para baixar</h2>
   <p class="corpo intro" id="mat-intro"></p>
@@ -357,6 +375,7 @@
     <div><h5>Navegar</h5><ul>
       <li><a href="#quem">Quem é</a></li>
       <li><a href="#cidade">Entregas por município</a></li>
+      <li><a href="#agenda">Agenda</a></li>
       <li><a href="#entregas-sec">O que chegou</a></li>
       <li><a href="#compromissos">Compromissos 2027—2031</a></li>
       <li><a href="#moldura">Moldura 5555</a></li>
@@ -368,7 +387,9 @@
 
 <script src="dados/campanha.js?v=be4ac0fe"></script>
 <script src="dados/mapa-piaui.js?v=2c659606"></script>
-<script src="js/app.js?v=553c5e14"></script>
+<script src="dados/agenda.js?v=5ba8b600"></script>
+<script src="js/app.js?v=c9f7db2c"></script>
+<script src="js/agenda.js?v=1972e4e2"></script>
 <script src="js/assistente.js?v=d975e366"></script>
 </body>
 </html>

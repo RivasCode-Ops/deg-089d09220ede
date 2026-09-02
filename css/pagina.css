@@ -1074,3 +1074,130 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   #resultado .linha { grid-template-columns: 1fr; }
   #resultado .linha .fonte { grid-column: 1; }
 }
+
+/* ---------- 03 · agenda ----------
+   Lista-tira, não grade de cartões: o eleitor lê uma agenda de cima para
+   baixo procurando a data, e cartão lado a lado obriga a varrer em zigue-zague.
+   O próximo compromisso é o elemento de maior peso da seção. */
+
+.agenda { background: #FFFFFF; border-top: 2px solid var(--gn-tinta); }
+.agenda-topo { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--e-5); align-items: start; margin-bottom: var(--e-3); }
+.agenda h2 {
+  font-stretch: var(--w-display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(2.1rem, 4vw, 3.2rem); line-height: .98; letter-spacing: -.02em;
+}
+.agenda .corpo { max-width: 58ch; color: #223448; font-size: 1rem; }
+.agenda .corpo b { font-family: var(--f-d); font-weight: 700; }
+#agenda-cidades { margin: var(--e-3) 0; }
+#agenda-cidades button[aria-pressed="true"] {
+  background: var(--gn-acao); border-color: var(--gn-acao); color: #fff;
+}
+
+.agenda-lista { display: grid; gap: 14px; }
+
+.ag-tira {
+  display: grid; grid-template-columns: 92px 1fr; gap: 20px;
+  border: 2px solid var(--gn-tinta); border-radius: var(--raio);
+  background: #FFFFFF; padding: 20px 22px;
+}
+.ag-dia { text-align: center; }
+.ag-dia b {
+  display: block; font-stretch: var(--w-display); font-weight: 800;
+  font-size: 3.2rem; line-height: .9; letter-spacing: -.04em; color: var(--gn-azul);
+}
+.ag-dia span {
+  display: block; font-size: .74rem; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--gn-sombra); margin-top: 4px;
+}
+.ag-corpo h4 { font-stretch: var(--w-titulo); font-weight: 800; font-size: 1.24rem; line-height: 1.15; margin: 8px 0 6px; }
+.ag-onde { font-family: var(--f-t); font-size: .98rem; line-height: 1.5; color: #223448; }
+.ag-obs { font-family: var(--f-t); font-size: .9rem; line-height: 1.45; color: var(--gn-sombra); margin-top: 6px; }
+
+.ag-selo {
+  display: inline-block; font-size: .64rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; padding: 4px 9px; border-radius: var(--raio);
+}
+.ag-selo-confirmado { background: var(--gn-azul); color: #fff; }
+.ag-selo-previsto   { background: transparent; color: var(--gn-azul-texto); border: 1px dashed var(--gn-azul-texto); }
+.ag-selo-cancelado  { background: #B3261E; color: #fff; }
+.ag-selo-realizado  { background: var(--gn-gelo); color: var(--gn-sombra); border: 1px solid var(--gn-linha); }
+
+/* O previsto diz o que falta, e não só que é previsto. */
+.ag-falta {
+  margin-top: 9px; padding: 8px 12px; background: var(--gn-gelo);
+  border-left: 3px solid var(--gn-azul-texto);
+  font-family: var(--f-t); font-size: .9rem; line-height: 1.45; color: var(--gn-azul-texto);
+}
+
+/* Cancelado NÃO some — some do site é parecer que nunca existiu. Fica
+   riscado, e o motivo é obrigatório no dado. */
+.ag-cancelado { border-color: #B3261E; background: #FFF7F6; }
+.ag-cancelado .ag-corpo h4 { text-decoration: line-through; color: var(--gn-sombra); }
+.ag-cancelado .ag-dia b { color: var(--gn-sombra); }
+.ag-motivo {
+  margin-top: 9px; padding: 8px 12px; background: #FFFFFF;
+  border-left: 3px solid #B3261E;
+  font-family: var(--f-t); font-size: .9rem; line-height: 1.45; color: #8E1F17;
+}
+
+.ag-proximo { border-width: 3px; background: var(--gn-papel); }
+.ag-proximo .ag-dia b { font-size: 4.2rem; }
+.ag-contagem {
+  margin-top: 10px; font-stretch: var(--w-rotulo); font-weight: 800;
+  font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gn-acao);
+}
+
+.ag-acao {
+  display: inline-block; margin-top: 14px; margin-right: 8px;
+  font-family: var(--f-d); font-weight: 600; font-size: .86rem; cursor: pointer;
+  background: var(--gn-acao); color: #fff; border: 0; text-decoration: none;
+  padding: 12px 18px; border-radius: var(--raio); min-height: 44px;
+  display: inline-flex; align-items: center;
+}
+.ag-acao-fraca { background: transparent; color: var(--gn-azul); border: 2px solid var(--gn-azul); }
+
+/* Agenda vazia DIZ que está vazia. Sumir ou mostrar coisa velha são as duas
+   maneiras de a agenda apodrecer sem ninguém ver. */
+.ag-vazio {
+  border: 2px dashed var(--gn-sombra); border-radius: var(--raio);
+  background: var(--gn-gelo); padding: 26px;
+}
+.ag-vazio p { font-family: var(--f-t); font-size: 1.06rem; line-height: 1.5; color: var(--gn-tinta); }
+.ag-vazio-mini { font-size: .92rem !important; color: var(--gn-sombra) !important; margin-top: 8px; }
+
+#agenda-aviso:empty { display: none; }
+.ag-parada, .ag-quebrada {
+  padding: 14px 16px; margin-bottom: var(--e-3);
+  font-family: var(--f-t); font-size: .95rem; line-height: 1.5;
+  border-left: 3px solid #B3261E; background: #FFF7F6; color: #8E1F17;
+}
+
+.ag-passados { margin-top: var(--e-3); }
+.ag-passados summary {
+  cursor: pointer; font-stretch: var(--w-rotulo); font-weight: 700;
+  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gn-azul-texto); padding: 12px 0;
+}
+.ag-passados .ag-tira { margin-top: 12px; opacity: .78; }
+
+/* O compromisso da cidade, no topo do resultado da busca. */
+.busca-agenda {
+  border: 2px solid #fff; border-radius: var(--raio);
+  padding: 16px 18px; margin-bottom: 18px;
+}
+.busca-agenda b {
+  display: block; font-stretch: var(--w-titulo); font-weight: 800; font-size: 1.06rem; color: #fff;
+}
+.busca-agenda p { font-family: var(--f-t); font-size: .95rem; line-height: 1.5; color: #fff; margin-top: 5px; }
+.busca-agenda-link {
+  display: inline-block; margin-top: 10px; font-size: .86rem; font-weight: 600;
+  color: #fff; border-bottom: 2px solid #fff;
+}
+
+@media (max-width: 1080px) { .agenda-topo { grid-template-columns: 1fr; gap: var(--e-3); } }
+@media (max-width: 560px) {
+  .ag-tira { grid-template-columns: 1fr; gap: 10px; }
+  .ag-dia { text-align: left; display: flex; align-items: baseline; gap: 10px; }
+  .ag-dia b { font-size: 2.4rem; }
+  .ag-proximo .ag-dia b { font-size: 3rem; }
+}

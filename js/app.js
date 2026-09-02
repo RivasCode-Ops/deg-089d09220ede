@@ -249,8 +249,25 @@
     });
   }
 
+  /* O compromisso daquela cidade, no topo do resultado. So a tira, sem os
+     botoes de calendario: aqui ele e resposta, e a secao Agenda e onde se age. */
+  function agendaNaBusca(it) {
+    var box = el('div', 'busca-agenda');
+    box.appendChild(el('b', null, 'Ele vai a ' + it.cidade));
+    box.appendChild(el('p', null, it.titulo + ' — ' + window.GN_AGENDA.porExtenso(it.data) +
+      (it.hora ? ', ' + it.hora : '') + (it.local ? ', ' + it.local : '')));
+    var a = el('a', 'busca-agenda-link', 'Ver na agenda');
+    a.href = '#agenda';
+    box.appendChild(a);
+    return box;
+  }
+
   function buscar(termo) {
     var saida = achar('#resultado');
+    /* O evento daquela cidade entra ANTES das entregas. Quem procura "Picos"
+       quer saber primeiro se ele vem, e só depois o que já chegou — é o que
+       tira a agenda de seção isolada e a põe no eixo "sua cidade". */
+    var agendaDaCidade = null;
     saida.textContent = '';
     var k = chave(termo);
 
@@ -273,9 +290,16 @@
         'Esta busca cobre hoje ' + indice.size + ' dos 224 municípios do Piauí. ' +
         'Não significa que nada chegou lá — significa que o levantamento de emendas por ' +
         'município ainda não foi entregue pelo gabinete.'));
+      /* Mesmo sem entrega listada, se ele VAI aquela cidade isso e a
+         resposta mais util que a pagina tem — e ela vinha sendo omitida. */
+      agendaDaCidade = window.GN_AGENDA && window.GN_AGENDA.proximoEm(termo);
+      if (agendaDaCidade) { box.appendChild(agendaNaBusca(agendaDaCidade)); }
       saida.appendChild(box);
       return;
     }
+
+    agendaDaCidade = window.GN_AGENDA && window.GN_AGENDA.proximoEm(achados[0].nome);
+    if (agendaDaCidade) { saida.appendChild(agendaNaBusca(agendaDaCidade)); }
 
     achados.sort(function (a, b) { return a.nome.localeCompare(b.nome, 'pt-BR'); });
     achados.forEach(function (c) {

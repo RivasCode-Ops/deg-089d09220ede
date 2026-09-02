@@ -1143,6 +1143,46 @@
     }
   };
 
+  /* A altura da faixa fixa vira --topo-h, e o CSS usa isso no
+     scroll-padding-top. Ela NÃO é constante: muda quando o texto das tarjas
+     quebra em mais linhas, e mudou de novo quando o nav ganhou um item. Medir
+     e observar custa quatro linhas; um número fixo envelhece calado. */
+  (function () {
+    var topo = document.querySelector('.topo');
+    if (!topo) { return; }
+    function medir() {
+      document.documentElement.style.setProperty(
+        '--topo-h', Math.round(topo.getBoundingClientRect().height) + 'px');
+    }
+    medir();
+    if (window.ResizeObserver) { new ResizeObserver(medir).observe(topo); }
+    window.addEventListener('orientationchange', medir);
+  }());
+
+  /* A gaveta de seções do celular. */
+  (function () {
+    var bt = document.getElementById('menu-bt');
+    var nav = document.getElementById('nav-principal');
+    if (!bt || !nav) { return; }
+    function fechar() {
+      document.body.classList.remove('menu-aberto');
+      bt.setAttribute('aria-expanded', 'false');
+    }
+    bt.addEventListener('click', function () {
+      var abrindo = !document.body.classList.contains('menu-aberto');
+      document.body.classList.toggle('menu-aberto', abrindo);
+      bt.setAttribute('aria-expanded', String(abrindo));
+      if (abrindo) { var p = nav.querySelector('a'); if (p) { p.focus(); } }
+    });
+    /* Escolher uma seção fecha a gaveta — senão ela cobre o destino. */
+    nav.addEventListener('click', function (ev) {
+      if (ev.target.tagName === 'A') { fechar(); }
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && document.body.classList.contains('menu-aberto')) { fechar(); }
+    });
+  }());
+
   barraEstado();
   fotosFixas();
   numeros();

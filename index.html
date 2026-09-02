@@ -31,7 +31,7 @@
 
 <link rel="stylesheet" href="css/fontes.css?v=7cfc8710">
 <link rel="stylesheet" href="css/base.css?v=78fc302d">
-<link rel="stylesheet" href="css/pagina.css?v=0d5ca1c9">
+<link rel="stylesheet" href="css/pagina.css?v=33f8765f">
 </head>
 <body>
 
@@ -54,7 +54,16 @@
 
 <header><div class="bar">
   <div class="logo"><span class="nome">Georgiano</span><span class="selo">5555</span></div>
-  <nav>
+  <!-- Abaixo de 721px o nav estava escondido e não havia nada no lugar: no
+       aparelho onde a maior parte do eleitorado abre o site, não dava para
+       pular de seção — só rolando 16 mil pixels. Este botão só existe ali. -->
+  <button class="menu-bt" id="menu-bt" type="button"
+          aria-expanded="false" aria-controls="nav-principal">
+    <span class="menu-bt-tracos" aria-hidden="true"></span>
+    <span>Seções</span>
+  </button>
+
+  <nav id="nav-principal">
     <a class="on" href="#topo">Início</a>
     <a href="#cidade">Sua cidade</a>
     <a href="#agenda">Agenda</a>
@@ -392,7 +401,7 @@
 <script src="dados/campanha.js?v=a1a5254b"></script>
 <script src="dados/mapa-piaui.js?v=2c659606"></script>
 <script src="dados/agenda.js?v=5ba8b600"></script>
-<script src="js/app.js?v=c9f7db2c"></script>
+<script src="js/app.js?v=845a24ff"></script>
 <script src="js/agenda.js?v=1972e4e2"></script>
 <script src="js/assistente.js?v=d975e366"></script>
 </body>

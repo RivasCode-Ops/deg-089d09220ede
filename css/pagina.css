@@ -31,6 +31,67 @@
   :root { --w-display: 84%; --w-titulo: 92%; --w-rotulo: 96%; }
 }
 
+/* ---------- menu no celular ----------
+   Gaveta em tela cheia, não um nav espremido: com nove seções, uma faixa
+   rolável de lado esconderia metade delas e ninguém rola menu horizontal. */
+.menu-bt {
+  display: none; align-items: center; gap: 9px; margin-left: auto;
+  font-family: var(--f-d); font-weight: 700; font-size: .84rem;
+  background: transparent; color: var(--gn-tinta);
+  border: 2px solid var(--gn-tinta); border-radius: var(--raio);
+  padding: 10px 14px; min-height: 44px; cursor: pointer;
+}
+.menu-bt-tracos, .menu-bt-tracos::before, .menu-bt-tracos::after {
+  display: block; width: 18px; height: 2px; background: currentColor; content: '';
+}
+.menu-bt-tracos { position: relative; }
+.menu-bt-tracos::before { position: absolute; top: -6px; }
+.menu-bt-tracos::after  { position: absolute; top: 6px; }
+
+@media (max-width: 720px) {
+  .menu-bt { display: flex; }
+  .zap { margin-left: 0; }
+
+  /* Fechado, o nav não ocupa espaço nem recebe foco de teclado. */
+  nav { display: none; }
+  body.menu-aberto nav {
+    display: grid; gap: 0;
+    /* Comeca ABAIXO da faixa, e nao por cima dela com z-index: disputar
+       camada com um sticky nao funcionou, e por cima a gaveta cobria o proprio
+       botao que a fecha — sobrava so o Esc, que no celular ninguem tem. */
+    position: fixed; top: var(--topo-h); left: 0; right: 0; bottom: 0; z-index: 19;
+    background: var(--gn-azul); color: #fff;
+    padding: 12px 22px 22px;
+    align-content: start; overflow-y: auto;
+  }
+  body.menu-aberto nav a {
+    color: #fff; font-stretch: var(--w-titulo); font-weight: 700;
+    font-size: 1.24rem; padding: 16px 0; min-height: 56px;
+    border-bottom: 1px solid rgba(255,255,255,.22); border-top: 0;
+    display: flex; align-items: center;
+  }
+  body.menu-aberto nav a.on { border-bottom-color: #fff; }
+  /* Com a gaveta aberta, o resto não rola atrás dela. */
+  body.menu-aberto { overflow: hidden; }
+}
+
+/* ---------- a âncora para abaixo da faixa ----------
+   Medido em 02/09/2026: a faixa fixa tem entre 138px (desktop largo) e 220px
+   (celular pequeno), e o navegador leva o topo da seção ao topo da JANELA.
+   Resultado: nas nove seções o primeiro conteúdo caía atrás da faixa — em
+   "Sua cidade" e "Moldura" o próprio título sumia, e no celular a pessoa
+   chegava no meio do parágrafo.
+
+   A altura não é chutada: js/app.js mede a faixa e escreve --topo-h, e
+   observa o redimensionamento — a faixa muda de altura quando o texto dela
+   quebra em duas linhas. O valor abaixo é só o ponto de partida. */
+:root { --topo-h: 138px; }
+html { scroll-padding-top: calc(var(--topo-h) + 16px); scroll-behavior: smooth; }
+@media (max-width: 1080px) { :root { --topo-h: 160px; } }
+@media (max-width: 720px)  { :root { --topo-h: 208px; } }
+@media (max-width: 380px)  { :root { --topo-h: 220px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
 /* ---------- topo grudado: demonstração + estado + navegação ----------
    O `header` do mockup era `sticky` sozinho. Com duas faixas acima dele,
    empilhar três `sticky:top:0` faz as três se sobreporem no mesmo pixel.
@@ -159,6 +220,13 @@
   box-shadow: 0 3px 0 var(--gn-azul);
 }
 .gn-lancador:hover { background: var(--gn-azul); }
+/* Ele flutua sobre a página e, medido, cobria o texto do resultado da busca e
+   os botões da moldura no celular. Os dois blocos ganham folga embaixo do
+   tamanho dele — mais honesto que esconder o lançador, que é o caminho de
+   entrada do assistente. */
+@media (max-width: 720px) {
+  #resultado, .mold-controles, .agenda-lista { padding-bottom: 76px; }
+}
 .gn-lancador-selo {
   font-stretch: var(--w-marca); font-weight: 800; font-size: .92rem;
   letter-spacing: .03em; background: #fff; color: var(--gn-azul);
@@ -206,6 +274,32 @@
   margin-left: auto; flex: none; cursor: pointer;
   background: transparent; border: 0; color: #fff;
   font-size: 1.6rem; line-height: 1; padding: 0 4px;
+}
+
+/* O painel é coluna flex, e sem isto o flexbox encolhe justamente a linha
+   que não pode encolher: medido em janela de 620px de altura (notebook
+   1366×768 comum, e qualquer celular deitado), a linha do campo caía de 56px
+   para 36px e o botão "Perguntar" vazava para fora do painel, que tem
+   overflow hidden. Quem encolhe é a conversa; o campo e os chips, não. */
+.gn-chat .pergunte-corpo { flex: 1 1 auto; min-height: 0; }
+.gn-chat .sug            { flex: 0 0 auto; }
+.gn-chat .campo          { flex: 0 0 auto; overflow: visible; }
+
+/* Os chips eram estilizados por `.pergunte .sug button`. Quando o painel saiu
+   da seção e virou flutuante, essa regra deixou de casar — e eles voltaram ao
+   estilo de `.sug span` da busca, que é desenhado para fundo AZUL: ficaram
+   em rgb(206,220,239) sobre branco, contraste 1,39:1 contra o mínimo de 4,5.
+   Invisíveis, e são o principal atalho de uso do assistente.
+   A varredura de contraste não pegou porque o painel nasce fechado — isso
+   também foi corrigido, na sonda. */
+.gn-chat .sug button, .gn-chat .chip, .msg-tambem .chip {
+  font-family: var(--f-d); font-size: .8rem; cursor: pointer;
+  background: #FFFFFF; color: var(--gn-tinta);
+  border: 1px solid var(--gn-sombra); border-radius: var(--raio);
+  padding: 9px 13px; min-height: 40px;
+}
+.gn-chat .sug button:hover, .gn-chat .chip:hover, .msg-tambem .chip:hover {
+  border-color: var(--gn-acao); color: var(--gn-acao);
 }
 
 .gn-chat .pergunte-aviso { margin: 12px 14px 0; }

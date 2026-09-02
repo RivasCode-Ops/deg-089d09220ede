@@ -700,6 +700,39 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
   object-position: center;
 }
 
+/* ---------- a faixa do hero ----------
+   Medido em 02/09/2026, antes: o hero era a MENOR seção da página — 694px, 5%
+   do total, enquanto as entregas tinham 2435px e 18%. A abertura, que é onde
+   se decide se a pessoa fica, era o quinto menor bloco. E a tese ficava com
+   34 caracteres por linha na coluna espremida ao lado da imagem; o confortável
+   é 45 a 75.
+
+   A arte nova é 1535×688 — razão 2,23. Numa coluna lateral ela ficaria com
+   350px de largura e o 5555 sumiria. Em largura cheia ela é o que é, e o
+   texto desce para baixo dela com a coluna inteira. */
+.hero > .ph {
+  width: 100%; height: auto; border: 0; border-radius: 0;
+  aspect-ratio: 1535 / 688;
+  /* Medido: com teto de 64vh a faixa cortava 19% da arte numa tela de 700px
+     de altura. O teto existe para a manchete nao sair da primeira tela em
+     laptop baixo, entao ele acompanha a tela e nao um numero fixo. */
+  max-height: min(70vh, 620px);
+  background: var(--gn-azul);
+}
+.hero > .ph img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.hero > .ph .ph-tarja { top: auto; bottom: 0; }
+
+.hero .wrap { display: block; padding-top: var(--e-4); }
+.hero h1 { max-width: 18ch; }
+.hero .tese { max-width: 58ch; font-size: 1.3rem; }
+.hero .acoes { margin-bottom: var(--e-5); }
+
+@media (max-width: 720px) {
+  /* Em tela estreita a faixa 2,23 vira um filete de 100px de altura e o rosto
+     some. Ela passa a recortar para uma razão que ainda mostra gente. */
+  .hero > .ph { aspect-ratio: 4 / 3; }
+}
+
 /* ---------- o cartaz na proporção dele ----------
    Contido dentro do quadro do hero, a arte ficava com 328px de largura e duas
    faixas de azul nas laterais: proporção respeitada, destaque nenhum. Ela é a

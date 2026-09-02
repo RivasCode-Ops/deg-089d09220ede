@@ -200,8 +200,8 @@
      * qual foto pedir ao fotógrafo, nunca a fonte do arquivo do site.
      * ------------------------------------------------------------- */
     fotos: [
-      { slot: 'hero', arquivo: 'img/_candidatas/hero-arte.jpg', poster: true, acervo: true, origem: 'acervo',
-        provisoria: 'Arte de campanha 480×853, sem EXIF. Entra inteira, como cartaz — o lockup queimado nela repete o logo do topo. Entra só na degustação.',
+      { slot: 'hero', arquivo: 'img/_candidatas/hero-faixa.jpg', acervo: true, origem: 'acervo',
+        provisoria: 'Arte de campanha 1535×688, sem EXIF. O lockup queimado nela repete o logo do topo — a duplicação é o preço de manter o 5555 visível. Entra só na degustação.',
         titulo: 'Retrato oficial de campanha, sem o lockup',
         descricao: 'Camisa azul clara, fundo azul com a faixa em degradê verde/amarelo. A arte que circula ' +
                    'traz "GEORGIANO 5555 / CONFIANÇA PARA FAZER ACONTECER" queimado embaixo — no hero isso ' +

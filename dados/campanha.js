@@ -189,8 +189,8 @@
      * qual foto pedir ao fotógrafo, nunca a fonte do arquivo do site.
      * ------------------------------------------------------------- */
     fotos: [
-      { slot: 'hero', arquivo: 'img/_candidatas/hero.webp', acervo: true, origem: 'acervo',
-        provisoria: 'Retrato oficial em 700×429 SEM EXIF, e com tarja branca nas laterais — o recorte usa ~330×429 do centro e amplia 1,7×. O slot pede 1400px de largura. Entra só na degustação.',
+      { slot: 'hero', arquivo: 'img/_candidatas/hero.jpg', acervo: true, origem: 'acervo',
+        provisoria: 'Retrato oficial SEM EXIF. O arquivo veio 700×429 com tarja branca nas laterais; recortado na janela medida, sobram 309×429 de conteúdo. O slot pede 1400px de largura. Entra só na degustação.',
         titulo: 'Retrato oficial de campanha, sem o lockup',
         descricao: 'Camisa azul clara, fundo azul com a faixa em degradê verde/amarelo. A arte que circula ' +
                    'traz "GEORGIANO 5555 / CONFIANÇA PARA FAZER ACONTECER" queimado embaixo — no hero isso ' +

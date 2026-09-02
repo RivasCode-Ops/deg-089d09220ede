@@ -425,6 +425,17 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
   .divulgar h2 { font-size: 1.7rem; }
 }
 
+/* ---------- o quadro do hero abaixo de 1081px ----------
+   Ali o grid vira coluna única e o quadro ocupa a linha inteira: a 980px ele
+   fica 930×452, uma caixa deitada de proporção 2,06. O retrato tem 309×429,
+   proporção 0,72. `cover` numa caixa deitada escala pela LARGURA — 3× de
+   ampliação, e corta a cabeça para caber na altura.
+   Medido no endereço público em 01/09/2026. O quadro passa a ter teto de
+   largura e continua retrato, que é a forma do que vai dentro dele. */
+@media (max-width: 1080px) {
+  .retrato { max-width: 420px; margin-left: auto; margin-right: auto; }
+}
+
 /* ---------- foto pequena demais para o quadro ----------
    O hero pede 1400px de largura. Com um arquivo de 180px, `cover` amplia
    quase 4× e o resultado parece defeito de código, não falta de acervo.

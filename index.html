@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Georgiano 5555 — Deputado Federal · Piauí</title>
+<meta name="description" content="Três mandatos na Assembleia Legislativa do Piauí. O que chegou em cada município está listado aqui, com a fonte ao lado.">
+
+<!-- Cartão de link (WhatsApp, Facebook). Sem og:image de propósito: o cartão é
+     1.91:1 e a única arte que existe hoje é 9:16 — o recorte central come o
+     lockup inteiro. Quando img/og.jpg (1200×630) chegar, aponte-o em
+     dados/campanha.js → slot 'og' E acrescente a linha og:image aqui; o
+     verificador reprova se um existir sem o outro. Crawler não roda script,
+     então esta tag tem de ser estática. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Georgiano 5555">
+<meta property="og:title" content="Georgiano 5555 — Deputado Federal · Piauí">
+<meta property="og:description" content="O que chegou na sua cidade está listado aqui, com a fonte ao lado.">
+<meta name="twitter:card" content="summary">
+
+<!-- PEÇA DE DEMONSTRAÇÃO. Enquanto esta linha existir, a página pede para não
+     ser indexada — e o robots.txt da raiz repete o pedido, porque crawler que
+     ignora um costuma respeitar o outro. Os dois saem juntos, no dia em que
+     este virar o site de verdade, e não antes. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="stylesheet" href="css/fontes.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pagina.css">
+</head>
+<body>
+
+<!-- Topo grudado: as duas declarações e a navegação sobem juntas e ficam.
+     Um só contêiner `sticky` em vez de três — assim nenhuma barra precisa
+     saber a altura da outra, que é o que quebra quando o texto quebra em
+     duas linhas no celular. -->
+<div class="topo">
+
+<!-- Faixa de demonstração. Não fecha e não esconde: quem receber o link tem de
+     saber o que está olhando mesmo que role até o rodapé e volte. -->
+<div class="demo" role="note">
+  <b>Peça de demonstração</b> · versão de avaliação para o gabinete ·
+  não é o site oficial de campanha · conteúdo sujeito a validação
+</div>
+
+<!-- Barra de estado. O texto é escrito por js/app.js a partir de dados/campanha.js:
+     enquanto houver pendência bloqueando, a página se declara não liberada. -->
+<div class="nota" id="estado">Carregando estado da página…</div>
+
+<header><div class="bar">
+  <div class="logo"><span class="nome">Georgiano</span><span class="selo">5555</span></div>
+  <nav>
+    <a class="on" href="#topo">Início</a>
+    <a href="#cidade">Sua cidade</a>
+    <a href="#entregas-sec">Entregas</a>
+    <a href="#quem">Quem é</a>
+    <a href="#mandato">Mandato</a>
+    <a href="#compromissos">Compromissos</a>
+    <a href="#moldura">Moldura</a>
+    <a href="#divulgar">Divulgar</a>
+  </nav>
+  <a class="zap" id="zap" href="#">Entrar no grupo</a>
+</div></header>
+
+</div><!-- /.topo -->
+
+<main>
+
+<!-- A · ABERTURA -->
+<section class="hero" id="topo"><div class="wrap">
+  <div>
+    <p class="eyebrow">Deputado Federal · Piauí · PSD</p>
+    <h1>O sertão<br>não pede<br><em>favor.</em><br>Cobra<br>entrega.</h1>
+    <p class="tese">Três eleições para a Assembleia, a última com 109.025 votos. O que chegou na sua cidade está listado aqui — cada item com a fonte ao lado.</p>
+    <div class="acoes">
+      <a class="btn" href="#cidade">Ver o que chegou na minha cidade</a>
+      <a class="btn ghost" href="#quem">Conhecer o Georgiano</a>
+    </div>
+  </div>
+  <div class="retrato">
+    <div id="foto-hero"></div>
+  </div>
+</div><div class="bleed5"><b>5555</b></div></section>
+
+<!-- B · BUSCA POR MUNICÍPIO -->
+<section class="busca" id="cidade"><div class="wrap">
+  <div>
+    <h2>Comece pela<br>sua cidade.</h2>
+    <p id="busca-abrangencia">Carregando abrangência da busca…</p>
+  </div>
+  <div>
+    <div class="campo">
+      <label class="sr" for="campo-cidade" hidden>Nome do município</label>
+      <input class="txt" id="campo-cidade" type="search" autocomplete="off" placeholder="Digite sua cidade…">
+      <button class="go" id="campo-buscar" type="button">Buscar</button>
+    </div>
+    <div class="sug" id="sugestoes"></div>
+  </div>
+  <div id="resultado" style="grid-column:1/-1"></div>
+</div></section>
+
+<!-- B2 · MAPA DO PIAUÍ POR MUNICÍPIO
+     A malha vem de dados/mapa-piaui.js, baixada uma vez do IBGE e versionada.
+     O que está marcado sai de dados/campanha.js — o mesmo índice da busca,
+     para o mapa e a busca nunca discordarem. -->
+<section class="sec mapa" id="mapa"><div class="wrap">
+  <div class="mark"><b>Onde ele atuou</b><span>5555 · 01</span></div>
+  <div class="mapa-bloco">
+    <div class="mapa-tela" id="mapa-tela"></div>
+    <div class="mapa-lado">
+      <h2>O mapa não é<br>propaganda. É a conta.</h2>
+      <p class="corpo" id="mapa-intro">Carregando o mapa…</p>
+
+      <ul class="mapa-legenda">
+        <li><i class="am-tem"></i> Município com entrega listada e fonte ao lado</li>
+        <li><i class="am-sem"></i> Sem entrega publicada com fonte</li>
+      </ul>
+
+      <p class="mapa-aviso"><b>Branco não quer dizer que nada chegou lá.</b>
+        Quer dizer que não há entrega publicada <em>com fonte</em> nesta página.
+        O levantamento de emendas por município ainda não foi feito — está no
+        painel do fim da página, e é o item de maior retorno da lista.</p>
+
+      <h3 class="mapa-sub">Municípios marcados</h3>
+      <div class="mapa-lista" id="mapa-lista"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- B3 · PERGUNTE — assistente de perguntas.
+     NÃO é um modelo de linguagem: é recuperação. Casa a pergunta com um
+     registro de dados/campanha.js e devolve o registro com a fonte ao lado.
+     Não pode inventar porque não gera texto novo sobre fato nenhum.
+     O porquê de não ser um LLM está no cabeçalho de js/assistente.js. -->
+<section class="sec pergunte" id="pergunte"><div class="wrap">
+  <div class="mark"><b>Pergunte</b><span>5555 · 02</span></div>
+  <div class="pergunte-topo">
+    <h2>Pergunte.<br>Ele só responde<br>o que tem fonte.</h2>
+    <p class="corpo">Este assistente não é inteligência artificial e não escreve nada por
+      conta própria: ele procura a resposta em <b>dados/campanha.js</b>, o mesmo arquivo que
+      monta a página, e devolve o registro com a fonte ao lado. Quando não encontra, ele diz
+      que não sabe — em vez de inventar um número.</p>
+  </div>
+
+  <div class="pergunte-caixa" id="pergunte-caixa">
+    <div class="campo">
+      <label class="sr" for="pergunte-campo" hidden>Sua pergunta</label>
+      <input class="txt" id="pergunte-campo" type="search" autocomplete="off"
+             placeholder="O que chegou na minha cidade?">
+      <button class="go" id="pergunte-enviar" type="button">Perguntar</button>
+    </div>
+    <div class="sug" id="pergunte-sug"></div>
+    <div class="pergunte-saida" id="pergunte-saida" aria-live="polite"></div>
+  </div>
+</div></section>
+
+<!-- C · NÚMEROS DE AUTORIDADE -->
+<section class="nums"><div class="wrap" id="nums"></div></section>
+
+<!-- D · ENTREGAS -->
+<section class="sec" id="entregas-sec"><div class="wrap">
+  <div class="mark"><b>O que chegou perto de você</b><span>5555 · 03</span></div>
+  <div class="grid3" id="entregas"></div>
+  <p class="entregas-nota" id="entregas-nota"></p>
+</div></section>
+
+<!-- E · QUEM É -->
+<section class="bio" id="quem"><div class="wrap">
+  <div id="foto-bio"></div>
+  <div>
+    <p class="eyebrow">Quem é</p>
+    <h2>Chegou cedo.<br>E ficou.</h2>
+    <div class="corpo">
+      <p>Georgiano Fernandes Lima Neto foi eleito deputado estadual pelo Piauí em 2014, aos 20 anos — o mais jovem já eleito no estado. Foram 37.204 votos.</p>
+      <p>Em 2018 recebeu 79.723, a maior votação registrada para deputado estadual no Piauí até então. Em 2022 bateu o próprio recorde com 109.025 votos e se tornou o primeiro estadual do estado a passar de 100 mil.</p>
+      <p>O trabalho do mandato se organiza em torno de cinco frentes, listadas logo abaixo: máquina agrícola no município, saúde que não obriga a viajar, estrada de produção, água no semiárido e primeiro emprego para o jovem do interior.</p>
+    </div>
+    <a class="linkmais" href="https://sapl.al.pi.leg.br/parlamentar/281" rel="noopener noreferrer" target="_blank">Ficha parlamentar na ALEPI</a>
+  </div>
+</div></section>
+
+<!-- E2 · MANDATO — atividade parlamentar na ALEPI.
+     Existe desde 01/09/2026, quando o dado passou a existir: até então a
+     pendência 3 dizia "não há seção porque não há o dado". Tudo aqui sai de
+     dados/campanha.js → mandato, e cada número carrega a fonte. -->
+<section class="sec mandato" id="mandato"><div class="wrap">
+  <div class="mark"><b>O que ele fez na Assembleia</b><span>5555 · 04</span></div>
+  <div class="mandato-topo">
+    <h2>Três mandatos.<br>O que virou lei.</h2>
+    <p class="corpo" id="mandato-intro"></p>
+  </div>
+  <div class="mandato-grade" id="mandato-grade"></div>
+  <p class="mandato-fonte" id="mandato-fonte"></p>
+</div></section>
+
+<!-- F · COMPROMISSOS (as cinco pautas nomeadas) -->
+<section class="sec metas" id="compromissos"><div class="wrap">
+  <div class="mark"><b>Compromissos 2027 — 2031</b><span>5555 · 05</span></div>
+  <h2>Cinco pautas.<br>Com nome.</h2>
+  <div id="pautas"></div>
+</div></section>
+
+<!-- I · MOLDURA -->
+<section class="sec mold" id="moldura"><div class="wrap">
+  <div>
+    <p class="eyebrow">Participe</p>
+    <h2>Bote o 5555<br>na sua foto.</h2>
+    <p class="corpo">Escolhe a sua foto e baixa com a moldura da campanha. A imagem é montada dentro do seu navegador — nada é enviado para servidor nenhum.</p>
+    <div class="mold-controles">
+      <label class="mold-arquivo">Escolher foto<input id="mold-arquivo" type="file" accept="image/*"></label>
+      <button id="mold-baixar" type="button" disabled>Baixar minha moldura</button>
+      <button id="mold-compartilhar" type="button" hidden>Compartilhar</button>
+    </div>
+    <p id="mold-aviso"></p>
+
+    <!-- Passos 2 a 4. Ficam depois do botão de propósito: quem só quer a
+         moldura padrão não precisa passar por eles. -->
+    <div class="mold-passos">
+      <fieldset class="mold-passo">
+        <legend>Formato</legend>
+        <div class="chips" id="mold-formatos"></div>
+      </fieldset>
+
+      <fieldset class="mold-passo">
+        <legend>Moldura</legend>
+        <div class="chips" id="mold-estilos"></div>
+      </fieldset>
+
+      <fieldset class="mold-passo">
+        <legend>Frase</legend>
+        <select id="mold-frase"></select>
+      </fieldset>
+
+      <fieldset class="mold-passo mold-enquadrar">
+        <legend>Enquadrar</legend>
+        <label class="mold-zoom" for="mold-zoom">Zoom</label>
+        <input id="mold-zoom" type="range" min="100" max="320" value="100" disabled>
+        <div class="mold-botoes">
+          <button id="mold-girar" type="button" disabled>Girar</button>
+          <button id="mold-centrar" type="button" disabled>Centralizar</button>
+        </div>
+        <p class="mold-dica">Arraste a foto para enquadrar. Com dois dedos, dá zoom.</p>
+      </fieldset>
+    </div>
+  </div>
+  <div class="moldbox"><canvas id="mold-tela" aria-label="Prévia da sua foto com a moldura 5555"></canvas></div>
+</div></section>
+
+<!-- J · DIVULGAR — material para baixar e canais para acompanhar.
+     Ambos montados por js/app.js: os cartões saem de dados/campanha.js →
+     'materiais' e 'canais'. Material sem arquivo vira cartão que diz o que
+     falta, nunca botão que não baixa. -->
+<section class="sec divulgar" id="divulgar"><div class="wrap">
+  <div class="mark"><b>Leve o 5555 com você</b><span>5555 · 06</span></div>
+
+  <h2>Material para baixar</h2>
+  <p class="corpo intro" id="mat-intro"></p>
+  <div class="grid3" id="materiais"></div>
+
+  <h3 class="sub">Onde acompanhar</h3>
+  <div class="canais-bloco">
+    <div class="canais-retrato" id="foto-avatar"></div>
+    <div>
+      <p class="corpo intro" id="canais-intro"></p>
+      <ul class="canais" id="canais"></ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- PAINEL DE VERIFICAÇÃO — sai da página sozinho quando a lista zerar -->
+<section class="sec painel" id="painel-sec"><div class="wrap">
+  <div class="mark"><b>Antes de publicar</b><span>5555 · 99</span></div>
+  <div class="grupos" id="painel"></div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <div class="frow">
+    <div>
+      <div class="logo"><span class="nome">Georgiano</span><span class="selo">5555</span></div>
+      <p class="corpo" style="color:var(--gn-areia);font-size:1rem;margin-top:18px;max-width:34ch">Deputado Federal · Piauí · Partido Social Democrático</p>
+    </div>
+    <div><h5>Navegar</h5><ul>
+      <li><a href="#quem">Quem é</a></li>
+      <li><a href="#cidade">Entregas por município</a></li>
+      <li><a href="#entregas-sec">O que chegou</a></li>
+      <li><a href="#compromissos">Compromissos 2027—2031</a></li>
+      <li><a href="#moldura">Moldura 5555</a></li>
+    </ul></div>
+    <div><h5>Acompanhar</h5><ul id="canais"></ul></div>
+  </div>
+  <div class="legal" id="legal"></div>
+</div></footer>
+
+<script src="dados/campanha.js"></script>
+<script src="dados/mapa-piaui.js"></script>
+<script src="js/app.js"></script>
+<script src="js/assistente.js"></script>
+</body>
+</html>

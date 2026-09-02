@@ -1,0 +1,676 @@
+/* Georgiano 5555 — o que a página codada tem e o mockup não tinha:
+   campo de verdade, etiqueta de fonte em cada número, estado vazio honesto,
+   moldura funcional e painel de verificação. Nenhuma regra daqui mexe no
+   layout validado em css/base.css — só acrescenta. */
+
+/* ---------- larguras do eixo variável da Archivo ----------
+   O mockup pôs manchete em `font-stretch:125%` — expandida. O padrão de
+   manchete do PSD é o oposto: comprimido (o site do partido usa Interstate
+   Compressed). A Archivo já embutida aqui tem eixo de largura vivo de 62% a
+   125%, então inverter a direção não custa arquivo nenhum.
+
+   PROVA de que o eixo funciona, e não é só declaração no @font-face: medido
+   em 31/08/2026, "ENTREGA." a 100px/800 mede 361,2px em 62% e 678,8px em
+   125%, seis valores distintos em seis medidas — enquanto um eixo inventado
+   ('zzzz') fica plano em 548,9px. O verificador de tela repete essa medida.
+
+   Três faixas em vez de uma. Comprimir rótulo pequeno em caixa alta derruba
+   legibilidade, e é onde a compressão menos rende. */
+:root {
+  --w-display: 75%;   /* manchete e número grande — era 125% */
+  --w-titulo:  88%;   /* título de cartão e de meta — era 112%/118% */
+  --w-rotulo:  92%;   /* rótulo pequeno em caixa alta — era 118%/125% */
+
+  /* O lockup NÃO entra na inversão. Wordmark é ativo de marca, e a pendência
+     1.4 do arquivo de verificação pede o lockup fechado ao designer — mexer
+     na largura dele sem esse arquivo é inventar identidade. Fica como estava. */
+  --w-marca: 125%;
+}
+@media (max-width: 720px) {
+  /* comprimido demais em corpo pequeno fica ilegível */
+  :root { --w-display: 84%; --w-titulo: 92%; --w-rotulo: 96%; }
+}
+
+/* ---------- topo grudado: demonstração + estado + navegação ----------
+   O `header` do mockup era `sticky` sozinho. Com duas faixas acima dele,
+   empilhar três `sticky:top:0` faz as três se sobreporem no mesmo pixel.
+   Um contêiner só resolve sem número mágico: o que gruda é o bloco. */
+.topo { position: sticky; top: 0; z-index: 20; }
+.topo header { position: static; }
+
+.demo {
+  background: var(--gn-azul); color: #fff;
+  font-size: .74rem; line-height: 1.45; letter-spacing: .02em;
+  padding: 8px 22px; text-align: center;
+}
+.demo b { font-stretch: var(--w-rotulo); letter-spacing: .1em; text-transform: uppercase; }
+
+@media (max-width: 720px) {
+  /* Duas faixas fixas num aparelho de 640px de altura custam caro. Elas ficam,
+     porque as duas dizem coisa que quem recebe o link precisa saber — mas
+     encolhem para não comer um quarto da tela. */
+  .demo { font-size: .68rem; padding: 6px 16px; }
+}
+
+/* ---------- barra de estado (substitui a tarja "mockup") ---------- */
+.nota.barrada { background: #B3261E; color: #fff; }
+.nota.liberada { background: var(--gn-acao); color: #fff; }
+
+/* ---------- marcador de foto ----------
+   Três estados: foto entregue, foto escolhida e ainda por pedir, e foto que
+   nem existe no acervo. O terceiro é o que precisa gritar. */
+.ph i { display: block; padding: 18px; max-width: 34ch; }
+.ph i b {
+  display: block; font-size: .74rem; letter-spacing: .1em;
+  text-transform: uppercase; color: #16355F; margin-bottom: 8px;
+}
+.ph i span {
+  display: block; font-family: var(--f-t); font-size: .88rem; line-height: 1.45;
+  letter-spacing: 0; text-transform: none; color: #2C4A72;
+}
+.ph i a {
+  display: inline-block; margin-top: 10px; font-size: .68rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gn-azul); border-bottom: 1px solid currentColor;
+}
+.ph i .urgente {
+  margin-top: 10px; font-family: var(--f-d); font-size: .66rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: #8E1F17;
+}
+.ph-semacervo { border-color: #B3261E; }
+
+/* .ph é grid com place-items:center — ótimo para centralizar o texto do
+   marcador, péssimo para a foto: com o item centralizado a faixa do grid é
+   dimensionada pelo conteúdo, e height:100% na imagem resolve para auto.
+   Medido: um JPG de proporção 1:3,4 num quadro de 452px saía com 1490px de
+   altura, transbordando mil pixels — invisível só porque overflow:hidden
+   escondia. Com foto, .ph deixa de ser grid. */
+.ph-cheia { display: block; padding: 0; overflow: hidden; }
+.ph-cheia img {
+  width: 100%; height: 100%; display: block;
+  object-fit: cover;
+  object-position: top center; /* no recorte, o rosto é a parte que não pode sair */
+}
+
+/* ---------- texto de pendência não estoura a tela ----------
+   O painel imprime o texto que o gabinete escreveu, e nele cabe URL. URL é um
+   token sem oportunidade de quebra: a 305px, `sapl.al.pi.leg.br/parlamentar/281/materias`
+   empurrou a página inteira 84px para o lado. Medido em 01/09/2026, em três
+   larguras. A quebra é do texto, não da caixa — por isso `anywhere` e não
+   `overflow:hidden`, que esconderia o motivo em vez de mostrá-lo. */
+.grupo li, .grupo li b, .grupo li span, .mandato-fonte, .mapa-aviso {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- B3 · pergunte ----------
+   Reaproveita .campo e .sug da busca de propósito: é o mesmo gesto — digitar
+   e receber. Dois campos com formas diferentes na mesma página ensinariam
+   duas gramáticas para a mesma coisa.
+
+   O bloco é claro, e não azul como a busca: a resposta traz fonte, etiqueta e
+   número, e essa densidade toda sobre azul cansa. */
+
+.pergunte { background: var(--gn-papel); border-top: 2px solid var(--gn-tinta); }
+.pergunte-topo { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--e-5); align-items: start; margin-bottom: var(--e-4); }
+.pergunte h2 {
+  font-stretch: var(--w-display); font-weight: 800; text-transform: uppercase;
+  font-size: 2.3rem; line-height: .98; letter-spacing: -.02em;
+}
+.pergunte .corpo { max-width: 64ch; color: #223448; font-size: 1rem; }
+.pergunte .corpo b { font-family: var(--f-d); font-weight: 700; }
+
+/* O campo da busca é desenhado para fundo escuro. Aqui o fundo é claro. */
+.pergunte .campo { border-color: var(--gn-tinta); background: #FFFFFF; }
+.pergunte .campo .txt { color: var(--gn-tinta); }
+.pergunte .campo .txt::placeholder { color: var(--gn-sombra); }
+.pergunte .sug { margin-top: 14px; }
+.pergunte .sug button, .resp-atalho {
+  font-family: var(--f-d); font-size: .8rem; cursor: pointer;
+  border: 1px solid var(--gn-linha); background: #FFFFFF;
+  color: var(--gn-tinta); padding: 8px 13px; border-radius: var(--raio);
+}
+.pergunte .sug button:hover, .resp-atalho:hover {
+  border-color: var(--gn-acao); color: var(--gn-acao);
+}
+
+.pergunte-saida:empty { display: none; }
+.pergunte-saida { margin-top: var(--e-3); }
+
+.resp {
+  background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);
+  padding: 24px 24px 26px; max-width: 78ch;
+}
+.resp h4 {
+  font-stretch: var(--w-titulo); font-weight: 800; font-size: 1.2rem;
+  line-height: 1.15; margin-bottom: 12px;
+}
+.resp > p { font-family: var(--f-t); font-size: 1rem; line-height: 1.55; color: #223448; }
+.resp > p + p { margin-top: 10px; }
+
+/* "Não sei" é uma resposta de primeira classe, e por isso tem forma própria.
+   Assistente que esconde o que não sabe ensina a pessoa a confiar demais. */
+.resp-naosei { border-style: dashed; background: var(--gn-gelo); }
+.resp-naosei > p:first-of-type { color: var(--gn-azul-texto); }
+
+.resp-item {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gn-linha);
+}
+.resp-item b { display: block; font-stretch: var(--w-titulo); font-weight: 700; font-size: 1.02rem; }
+.resp-item p { font-family: var(--f-t); font-size: .92rem; line-height: 1.5; color: #223448; margin-top: 4px; }
+.resp-item a { color: var(--gn-acao); border-bottom: 1px solid currentColor; font-size: .92rem; }
+.resp-num {
+  display: inline-block; font-stretch: var(--w-display); font-weight: 800;
+  font-size: 1.5rem; line-height: 1; color: var(--gn-azul); margin-bottom: 4px;
+}
+.resp-item .fonte { margin-top: 8px; }
+.resp-atalho { margin-top: 18px; }
+
+@media (max-width: 1080px) { .pergunte-topo { grid-template-columns: 1fr; gap: var(--e-3); } }
+@media (max-width: 720px) { .pergunte h2 { font-size: 1.8rem; } .resp { padding: 18px; } }
+
+/* ---------- E2 · mandato na ALEPI ----------
+   Cinco números de grandezas MUITO diferentes — 1 PEC e 336 matérias na mesma
+   grade. Dar o mesmo corpo aos cinco faria o 336 dominar por acidente de
+   dígito. O primeiro cartão é o que importa (leis) e ganha corpo maior; o
+   último é o volume e ganha o menor. */
+
+.mandato { background: var(--gn-gelo); border-top: 2px solid var(--gn-tinta); }
+.mandato-topo { display: grid; grid-template-columns: .8fr 1.2fr; gap: var(--e-5); align-items: start; }
+.mandato h2 {
+  font-stretch: var(--w-display); font-weight: 800; text-transform: uppercase;
+  font-size: 2.4rem; line-height: .98; letter-spacing: -.02em;
+}
+.mandato .corpo { max-width: 60ch; color: #223448; font-size: 1.02rem; }
+
+.mandato-grade {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px; background: var(--gn-linha);
+  margin-top: var(--e-4); border: 1px solid var(--gn-linha);
+}
+.mand { background: #FFFFFF; padding: 24px 22px 26px; }
+.mand .n {
+  display: block; font-stretch: var(--w-display); font-weight: 800;
+  font-size: 2.6rem; line-height: 1; letter-spacing: -.03em; color: var(--gn-azul);
+}
+.mand h4 {
+  font-stretch: var(--w-rotulo); font-weight: 700; font-size: .74rem;
+  letter-spacing: .12em; text-transform: uppercase; margin: 12px 0 10px;
+}
+.mand p { font-family: var(--f-t); font-size: .88rem; line-height: 1.5; color: #223448; }
+
+/* O primeiro cartão é a realização; o último é volume. */
+.mand-leis { background: var(--gn-azul); }
+.mand-leis .n, .mand-leis h4 { color: #fff; }
+.mand-leis p { color: var(--gn-areia); }
+.mand-total .n { font-size: 2rem; color: var(--gn-sombra); }
+
+.mandato-fonte {
+  margin-top: 22px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: .8rem; color: var(--gn-sombra);
+}
+/* A cor de ação NÃO serve para link sobre gelo, e o número da paleta esconde
+   isso: os 4,92:1 do #0072CB foram medidos contra BRANCO. Contra o gelo
+   #F4F4F4 o mesmo azul dá 4,47:1 — abaixo do 4,5 de AA. Medido em 01/09/2026
+   pela varredura da página montada, não estimado.
+   Regra que fica: sobre gelo, link é --gn-azul-texto (12,8:1). A cor de ação
+   continua valendo em botão, que tem fundo próprio, e em link sobre branco. */
+.mandato-fonte a { color: var(--gn-azul-texto); border-bottom: 1px solid currentColor; }
+
+@media (max-width: 1080px) { .mandato-topo { grid-template-columns: 1fr; gap: var(--e-3); } }
+@media (max-width: 720px) { .mandato h2 { font-size: 1.9rem; } }
+
+/* ---------- B2 · mapa do Piauí ----------
+   O mapa fica sobre fundo claro, e não sobre o azul das seções vizinhas:
+   município marcado é pintado no azul do sistema, e azul sobre azul não é
+   mapa, é mancha. */
+
+.mapa { background: #FFFFFF; border-top: 2px solid var(--gn-tinta); border-bottom: 2px solid var(--gn-tinta); }
+.mapa-bloco { display: grid; grid-template-columns: .85fr 1.15fr; gap: var(--e-5); align-items: start; }
+
+.mapa-tela svg { width: 100%; height: auto; display: block; }
+.mapa-tela path { stroke: var(--gn-tinta); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
+.mapa-tela path.am-sem { fill: #FFFFFF; }
+.mapa-tela path.am-tem { fill: var(--gn-azul); cursor: pointer; }
+.mapa-tela path.am-tem:hover { fill: var(--gn-acao); }
+/* O anel de foco do site é outline + box-shadow, que em SVG não desenha do
+   mesmo jeito. Aqui o foco é traço: grosso, branco por dentro do azul. */
+.mapa-tela path.am-tem:focus-visible {
+  outline: none; fill: var(--gn-acao);
+  stroke: #FFFFFF; stroke-width: 3.5;
+}
+
+.mapa h2 {
+  font-stretch: var(--w-display); font-weight: 800; text-transform: uppercase;
+  font-size: 2.4rem; line-height: .98; letter-spacing: -.02em; margin-bottom: 20px;
+}
+.mapa .corpo { max-width: 54ch; color: #223448; }
+
+.mapa-legenda { list-style: none; margin: 26px 0 0; display: grid; gap: 9px; }
+.mapa-legenda li {
+  display: flex; align-items: center; gap: 11px;
+  font-family: var(--f-t); font-size: .95rem; color: #223448;
+}
+.mapa-legenda i {
+  width: 22px; height: 15px; flex: none; display: block;
+  border: 1.5px solid var(--gn-tinta); border-radius: 1px;
+}
+.mapa-legenda .am-tem { background: var(--gn-azul); }
+.mapa-legenda .am-sem { background: #FFFFFF; }
+
+/* A frase que impede o mapa de mentir. Fica com peso de cartão, não de nota
+   de rodapé: num mapa de campanha, 19 de 224 pintados leem como "atuou aqui
+   e não ali", e o que o dado diz é outra coisa. */
+.mapa-aviso {
+  margin-top: 26px; padding: 16px 18px;
+  border-left: 3px solid var(--gn-acao); background: var(--gn-gelo);
+  font-family: var(--f-t); font-size: .95rem; line-height: 1.5; color: #223448;
+  max-width: 58ch;
+}
+.mapa-aviso b { font-family: var(--f-d); }
+
+.mapa-sub {
+  margin-top: var(--e-4); margin-bottom: 14px;
+  font-size: .72rem; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--gn-azul-texto);
+}
+.mapa-lista { display: flex; flex-wrap: wrap; gap: 8px; }
+.mapa-lista button {
+  font-family: var(--f-d); font-size: .82rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--gn-tinta);
+  border: 1px solid var(--gn-linha); border-radius: var(--raio);
+  padding: 7px 11px;
+}
+.mapa-lista button:hover { border-color: var(--gn-acao); color: var(--gn-acao); }
+.mapa-lista .conta {
+  font-size: .68rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  background: var(--gn-azul); color: #fff; border-radius: 999px;
+  min-width: 17px; text-align: center; padding: 1px 5px;
+}
+.mapa-lista button:hover .conta { background: var(--gn-acao); }
+
+.mapa-erro {
+  font-family: var(--f-t); font-size: .95rem; line-height: 1.5;
+  color: #8E1F17; border: 2px dashed #B3261E; padding: 18px; border-radius: var(--raio);
+}
+
+@media (max-width: 1080px) {
+  .mapa-bloco { grid-template-columns: 1fr; gap: var(--e-4); }
+  .mapa-tela { max-width: 420px; margin: 0 auto; }
+}
+@media (max-width: 720px) {
+  .mapa h2 { font-size: 1.9rem; }
+}
+
+/* ---------- J · divulgar: material e canais ----------
+   Reaproveita .card e .grid3 das entregas de propósito: material e entrega
+   são a mesma forma de conteúdo — um bloco com etiqueta, título, explicação
+   e uma ação. Inventar um segundo cartão obrigaria a manter dois. */
+
+.divulgar h2, .divulgar .sub {
+  font-stretch: var(--w-display); font-weight: 800; text-transform: uppercase;
+  font-size: 2rem; line-height: 1; letter-spacing: -.015em; margin-bottom: 12px;
+}
+.divulgar .sub { margin-top: var(--e-5); font-size: 1.5rem; }
+.divulgar .intro { max-width: 62ch; color: #223448; margin-bottom: var(--e-3); font-size: 1rem; }
+
+.card.mat .in { display: flex; flex-direction: column; height: 100%; }
+.mat-acao { align-self: flex-start; margin-top: auto; padding: 12px 20px; font-size: .86rem; }
+button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
+.mat-recado:empty { display: none; }
+.mat-recado {
+  margin-top: 10px; font-family: var(--f-t); font-size: .84rem; line-height: 1.4;
+  color: var(--gn-azul-texto);
+}
+
+/* Material que ainda não existe. A borda diz antes de o texto dizer — e o
+   cartão não tem botão nenhum, porque botão que não baixa é pior que ausência. */
+.card.mat-falta { border-style: dashed; background: var(--gn-gelo); }
+.mat-pendencia { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--gn-linha); }
+.mat-pendencia b {
+  display: block; font-size: .66rem; font-weight: 700; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--gn-azul-texto); margin-bottom: 6px;
+}
+.mat-pendencia span {
+  font-family: var(--f-t); font-size: .88rem; line-height: 1.45; color: #223448;
+}
+
+.canais-bloco { display: grid; grid-template-columns: 160px 1fr; gap: var(--e-4); align-items: start; }
+.canais-retrato .ph { height: 160px; width: 160px; }
+
+.canais { list-style: none; display: grid; gap: 0; max-width: 62ch; }
+.canais li {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 14px 0; border-top: 1px solid var(--gn-linha);
+}
+.canais li b { font-stretch: var(--w-titulo); font-weight: 700; font-size: 1.06rem; }
+.canais .arroba { font-family: var(--f-t); font-size: .92rem; color: var(--gn-sombra); }
+.canal-abrir {
+  margin-left: auto; font-weight: 600; font-size: .86rem; color: var(--gn-acao);
+  border-bottom: 2px solid var(--gn-acao); padding-bottom: 2px;
+}
+.canal-off {
+  margin-left: auto; font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--gn-sombra);
+  border: 1px dashed var(--gn-sombra); padding: 3px 8px; border-radius: var(--raio);
+}
+/* O motivo ocupa a linha inteira embaixo: em telas estreitas ele é o que
+   sobra, e espremê-lo ao lado do rótulo o cortaria. */
+.canal-porque {
+  flex-basis: 100%; font-family: var(--f-t); font-size: .86rem;
+  line-height: 1.4; color: var(--gn-sombra);
+}
+
+@media (max-width: 720px) {
+  .canais-bloco { grid-template-columns: 1fr; }
+  .canais-retrato .ph { width: 140px; height: 140px; }
+  .divulgar h2 { font-size: 1.7rem; }
+}
+
+/* ---------- foto pequena demais para o quadro ----------
+   O hero pede 1400px de largura. Com um arquivo de 180px, `cover` amplia
+   quase 4× e o resultado parece defeito de código, não falta de acervo.
+   Aqui a imagem para de crescer no tamanho nativo e fica centrada sobre a
+   cor do sistema — o quadro continua cheio e a foto continua nítida. */
+.ph-cheia.ph-mini {
+  display: grid; place-items: center;
+  background: var(--gn-faixa); background-color: var(--gn-azul);
+  padding: var(--e-3);
+}
+.ph-cheia.ph-mini img {
+  width: auto; height: auto;
+  max-width: min(100%, 260px); max-height: 100%;
+  object-fit: contain;
+  border: 4px solid #fff; border-radius: var(--raio);
+}
+@media (max-width: 720px) {
+  .ph-cheia.ph-mini img { max-width: min(100%, 180px); }
+}
+
+/* ---------- foto provisória ----------
+   Fica legível sobre qualquer foto: faixa cheia no pé, não texto solto por
+   cima da imagem. O `em` só aparece onde há altura para ele — no cartão de
+   158px a faixa comeria a foto inteira. */
+.ph-provisoria { position: relative; }
+.ph-tarja {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: var(--gn-acao); color: #fff;
+  padding: 7px 12px; text-align: left;
+}
+.ph-tarja b {
+  display: block; font-size: .6rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+}
+.ph-tarja em {
+  display: none; font-style: normal; font-family: var(--f-t);
+  font-size: .72rem; line-height: 1.4; margin-top: 3px;
+}
+.bio .ph-tarja em, .retrato .ph-tarja em { display: block; }
+
+/* No cartão o marcador tem texto e a caixa do mockup tem 158px fixos — o texto
+   vazava por cima da borda. A caixa passa a crescer com o conteúdo; a linha do
+   grid acompanha, que é o comportamento que o grid já tem. */
+.card .ph { height: auto; min-height: 158px; }
+.card .ph i { padding: 16px; font-size: .95em; }
+.card .ph i b { font-size: .68rem; }
+.card .ph i span { font-size: .82rem; }
+/* a borda vermelha do "sem acervo" some no cartão, que zera as bordas laterais:
+   vira faixa no topo, que sobrevive ao recorte */
+.card .ph-semacervo { box-shadow: inset 0 4px 0 #B3261E; }
+
+/* ---------- etiqueta de prova ---------- */
+.fonte {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 10px; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+}
+.fonte a { border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+.etiq {
+  border: 1px solid currentColor; border-radius: var(--raio);
+  padding: 2px 6px; font-size: .6rem; letter-spacing: .12em; opacity: .85;
+}
+.etiq-relatado { border-style: dashed; }
+.etiq-observado { border-style: solid; }
+.etiq-inferido { border-style: dotted; text-decoration: underline; }
+
+/* ---------- C · números ---------- */
+.nums .fonte { color: #9FB4CE; }
+
+/* ---------- B · busca ---------- */
+.campo .txt {
+  flex: 1; border: 0; background: transparent; outline: 0;
+  padding: 23px 24px; font-family: var(--f-d); font-size: 1.12rem; color: var(--gn-papel);
+}
+.campo .txt::placeholder { color: rgba(206, 220, 239, .7); }
+.campo .txt:focus-visible { background: rgba(255, 255, 255, .06); }
+.campo .go { border: 0; cursor: pointer; font-family: var(--f-d); }
+.sug button {
+  font-family: var(--f-d); font-size: .78rem; cursor: pointer;
+  border: 1px solid rgba(246, 241, 232, .3); background: transparent;
+  color: var(--gn-areia); padding: 7px 13px; border-radius: var(--raio);
+}
+.sug button:hover { border-color: #fff; color: #fff; }
+
+#resultado { margin-top: var(--e-4); }
+#resultado:empty { display: none; }
+#resultado .vazio {
+  border: 2px dashed rgba(246, 241, 232, .35); border-radius: var(--raio); padding: 26px;
+}
+#resultado .vazio p { font-family: var(--f-t); font-size: 1.06rem; color: #fff; margin: 0; }
+#resultado .vazio .miudo { font-size: .92rem; color: var(--gn-areia); margin-top: 10px; }
+#resultado .cidade { border-top: 1px solid rgba(246, 241, 232, .22); padding: 22px 0; }
+#resultado .cidade h3 {
+  display: flex; align-items: baseline; gap: 14px;
+  font-stretch: var(--w-display); font-weight: 800; font-size: 1.3rem; text-transform: uppercase; letter-spacing: -.01em;
+}
+#resultado .cidade h3 .conta {
+  margin-left: auto; font-size: .7rem; font-weight: 600; letter-spacing: .12em; color: #fff;
+}
+#resultado .linha {
+  display: grid; grid-template-columns: 110px 1fr; gap: 8px 18px; align-items: start; padding: 14px 0 0;
+}
+#resultado .linha p { font-family: var(--f-t); font-size: 1.02rem; line-height: 1.45; color: #fff; margin: 0; }
+#resultado .linha .fonte { grid-column: 2; color: #9FB4CE; margin-top: 4px; }
+#resultado .linha .tag { border-color: var(--gn-areia); color: var(--gn-areia); }
+
+/* ---------- D · cartões ---------- */
+.card .ctx { font-family: var(--f-t); font-size: .95rem; line-height: 1.5; color: #223448; margin-top: 10px; }
+.card .cid.semlugar { color: var(--gn-azul-texto); }
+.card .val { flex-wrap: wrap; gap: 6px; }
+.card .val .semvalor {
+  font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gn-sombra);
+}
+.card .fonte { color: var(--gn-sombra); }
+.card .ressalva {
+  margin-top: 12px; padding: 10px 12px; border-left: 3px solid var(--gn-acao);
+  background: var(--gn-gelo); font-family: var(--f-t); font-size: .9rem; line-height: 1.45; color: var(--gn-azul-texto);
+}
+.entregas-nota {
+  margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--gn-linha);
+  font-family: var(--f-t); font-size: .95rem; line-height: 1.55; color: var(--gn-sombra); max-width: 78ch;
+}
+.entregas-nota:empty { display: none; }
+
+/* ---------- I · moldura ---------- */
+/* O quadro seguia o `aspect-ratio:1` do mockup. Com três formatos ele passa a
+   seguir o canvas: a altura vem da proporção do próprio arquivo que vai sair,
+   e não de uma regra que só valia para o quadrado. */
+.mold .moldbox { padding: 0; overflow: hidden; aspect-ratio: auto; }
+#mold-tela { width: 100%; height: auto; display: block; cursor: grab; touch-action: none; }
+#mold-tela:active { cursor: grabbing; }
+
+/* ---------- controles da moldura ---------- */
+
+.mold-passos { display: grid; gap: 22px; margin-top: 30px; max-width: 44ch; }
+.mold-passo { border: 0; padding: 0; margin: 0; }
+.mold-passo legend {
+  padding: 0; margin-bottom: 10px;
+  font-size: .7rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--gn-azul-texto);
+}
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  font-family: var(--f-d); cursor: pointer; text-align: left;
+  background: #fff; color: var(--gn-tinta);
+  border: 2px solid var(--gn-linha); border-radius: var(--raio);
+  padding: 9px 13px; display: grid; gap: 3px; line-height: 1.15;
+}
+.chip span { font-size: .86rem; font-weight: 600; }
+.chip small { font-size: .68rem; color: var(--gn-sombra); letter-spacing: .04em; }
+.chip canvas { width: 66px; height: auto; display: block; margin-bottom: 5px; border-radius: 1px; }
+/* Estado escolhido por preenchimento e borda, não só por borda: em tela de
+   celular a diferença de 2px de borda some. */
+.chip[aria-pressed="true"] {
+  border-color: var(--gn-acao); background: var(--gn-acao); color: #fff;
+}
+.chip[aria-pressed="true"] small { color: rgba(255,255,255,.82); }
+
+#mold-frase {
+  font-family: var(--f-d); font-size: .92rem; padding: 11px 13px;
+  border: 2px solid var(--gn-linha); border-radius: var(--raio);
+  background: #fff; color: var(--gn-tinta); width: 100%; max-width: 34ch;
+}
+
+.mold-enquadrar[disabled], .mold-zoom { display: block; }
+.mold-zoom { font-size: .8rem; color: var(--gn-sombra); margin-bottom: 6px; }
+#mold-zoom { width: 100%; max-width: 34ch; accent-color: var(--gn-acao); }
+#mold-zoom:disabled { opacity: .45; }
+.mold-botoes { display: flex; gap: 8px; margin-top: 12px; }
+.mold-botoes button {
+  font-family: var(--f-d); font-size: .84rem; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--gn-azul);
+  border: 2px solid var(--gn-azul); border-radius: var(--raio); padding: 9px 16px;
+}
+.mold-botoes button:disabled { opacity: .4; cursor: default; }
+.mold-dica {
+  margin-top: 10px; font-family: var(--f-t); font-size: .82rem;
+  line-height: 1.4; color: var(--gn-sombra);
+}
+
+#mold-compartilhar {
+  font-family: var(--f-d); font-weight: 600; font-size: .92rem; padding: 16px 26px;
+  border-radius: var(--raio); background: transparent; color: var(--gn-acao);
+  border: 2px solid var(--gn-acao); cursor: pointer;
+}
+.mold-controles { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 28px; }
+.mold-arquivo {
+  display: inline-block; cursor: pointer;
+  background: var(--gn-acao); color: #fff;
+  font-weight: 600; font-size: .92rem; padding: 16px 26px; border-radius: var(--raio);
+}
+.mold-arquivo input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.mold-arquivo:focus-within { outline: 3px solid var(--gn-azul); outline-offset: 2px; }
+#mold-baixar {
+  font-family: var(--f-d); font-weight: 600; font-size: .92rem; padding: 16px 26px;
+  border-radius: var(--raio); background: transparent; color: var(--gn-azul);
+  border: 2px solid var(--gn-azul); cursor: pointer;
+}
+#mold-baixar[disabled] { opacity: .38; cursor: not-allowed; }
+#mold-aviso { margin-top: 14px; font-size: .84rem; color: var(--gn-sombra); min-height: 1.2em; }
+
+/* ---------- painel de verificação ---------- */
+.painel { background: #FFF; border-top: 2px solid var(--gn-tinta); }
+.painel .grupos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e-4); }
+.painel .grupo { border: 2px solid var(--gn-tinta); border-radius: var(--raio); padding: 24px; }
+.painel .grupo.trava { border-color: #B3261E; }
+.painel h4 {
+  font-stretch: var(--w-rotulo); font-weight: 800; font-size: .8rem; letter-spacing: .14em;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.painel .trava h4 { color: #B3261E; }
+.painel li { list-style: none; padding: 12px 0; border-top: 1px solid var(--gn-linha); }
+.painel li:first-child { border-top: 0; padding-top: 0; }
+.painel li b { display: block; font-size: .98rem; font-weight: 700; }
+.painel li span {
+  display: block; margin-top: 4px; font-family: var(--f-t);
+  font-size: .9rem; color: var(--gn-sombra);
+}
+
+/* ---------- canal sem URL ---------- */
+footer li .desligado { color: #8698AE; text-decoration: line-through; }
+footer li .porque { display: block; font-size: .72rem; line-height: 1.5; color: #8698AE; margin-bottom: 8px; }
+.zap.desligado { background: #33465E; color: #9FB4CE; cursor: not-allowed; }
+.legal .pendente { color: #FFC9C4; }
+.legal p + p { margin-top: 10px; }
+
+/* ---------- foco visível em tudo que recebe teclado ---------- */
+/* Anel duplo, e não um só: o #0072CB dá 2,92:1 contra o #001787 das seções
+   azuis — abaixo do 3:1 que um indicador de foco precisa. Branco por dentro
+   resolve no azul (14,26:1) e o halo azul resolve no claro (4,93:1). */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid #fff; outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--gn-acao);
+}
+
+/* ---------- o vazio no canto do hero ----------
+   Medido em 31/08/2026. O mockup põe `align-items:end` no grid do hero e
+   `align-self:end` no .retrato, e fixa o quadro em 452px. A coluna de texto,
+   porém, é mais alta que isso e cresce com a viewport, porque o H1 é
+   clamp(3rem, 6.4vw, 5.6rem). O quadro fica colado embaixo e sobra vazio em
+   cima — 214px a 1185px de largura, 272px a 1425px. Não é um número: é uma
+   função da largura, e quanto maior a tela, maior o buraco.
+
+   O quadro passa a esticar até a linha do grid. Só nas duas colunas: abaixo
+   de 1081px o grid vira coluna única, o .retrato não tem altura definida, e
+   height:100% ali resolveria para auto, derrubando os 452/330px que o mockup
+   reserva. Por isso isto mora dentro de um min-width, e não solto.
+
+   E o quadro sai do fluxo em vez de só esticar. `height:100%` sozinho não
+   resolve: numa faixa de grid de altura automática a porcentagem volta a ser
+   auto, e a foto passa a DEFINIR a altura da linha em vez de caber nela —
+   medido, um retrato alto levou a linha de 730px para 1536px e empurrou a
+   dobra inteira. Posicionado, o quadro não contribui para a altura: quem
+   manda na linha é a coluna de texto, sempre, com foto ou sem. */
+@media (min-width: 1081px) {
+  .hero .wrap { align-items: stretch; }
+  .retrato { align-self: stretch; }
+  .retrato .ph { position: absolute; inset: 0; height: auto; }
+}
+
+/* ---------- correções de largura herdadas do mockup ----------
+   Medido com sonda de scrollWidth em 31/08/2026: entre 721px e 1080px o
+   mockup validado empurra a página para 881px de largura e cria rolagem
+   horizontal. Duas causas, as duas corrigidas abaixo, nenhuma tocando o
+   desktop (≥1081px), que continua exatamente como foi aprovado.
+
+   1. A barra do topo só esconde o nav em ≤720px. Entre 721 e 1080 os seis
+      links + o botão do grupo não cabem em 657px úteis. Em vez de esconder
+      o nav e deixar o tablet sem navegação, a barra passa a quebrar em duas
+      linhas — mesma coisa que ela já faz de fato, agora declarada.
+   2. Os três números ficam em três colunas até 720px. "109.025" em 3,35rem
+      mede mais do que a coluna, e item de grid tem min-width:auto — a faixa
+      inteira estica em vez de quebrar. Empilham a partir de 1080px. */
+@media (max-width: 1080px) {
+  .painel .grupos { grid-template-columns: 1fr; }
+
+  .bar { flex-wrap: wrap; height: auto; padding-top: 14px; padding-bottom: 14px; row-gap: 12px; }
+  nav { order: 3; width: 100%; margin-left: 0; gap: 20px; flex-wrap: wrap; }
+  .zap { margin-left: auto; }
+
+  .nums .wrap { grid-template-columns: 1fr; gap: 30px; padding-top: 52px; padding-bottom: 52px; }
+  .nums div { padding-right: 0; }
+  .nums div + div {
+    border-left: 0; border-top: 1px solid rgba(255, 255, 255, .28);
+    padding-left: 0; padding-top: 30px;
+  }
+}
+/* item de grid e de flex nasce com min-width:auto e se recusa a encolher
+   abaixo do próprio conteúdo. Onde há texto longo, isso vira rolagem lateral. */
+.nums .wrap > div,
+.busca .wrap > div,
+.hero .wrap > *,
+.card,
+#resultado .linha { min-width: 0; }
+
+/* Abaixo de 380px o título da abertura não cabe nem com min-width:0 — a
+   palavra "ENTREGA." sozinha mede mais que a coluna, e .hero{overflow:hidden}
+   corta em silêncio em vez de estourar a página. Diminui a fonte. */
+@media (max-width: 380px) {
+  .hero h1 { font-size: 2.3rem; }
+  .bleed5 b { font-size: 6rem; }
+}
+.campo { max-width: 100%; }
+.campo .txt { min-width: 0; }
+@media (max-width: 720px) {
+  #resultado .linha { grid-template-columns: 1fr; }
+  #resultado .linha .fonte { grid-column: 1; }
+}

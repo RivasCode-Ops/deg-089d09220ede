@@ -213,7 +213,8 @@
         titulo: 'Retrato de perfil, quadrado',
         descricao: 'Rosto centralizado, fundo chapado, legível a 120px. É a foto que acompanha a lista de canais.',
         post: null, recorte: 'Quadrado, mínimo 400×400. O rosto ocupa a metade central.' },
-      { slot: 'og', arquivo: null, acervo: true, origem: 'montagem',
+      { slot: 'og', arquivo: 'img/_candidatas/og.jpg', acervo: true, origem: 'montagem',
+        provisoria: 'Montado a partir da arte de campanha, que e provisoria: 1200x630 com a faixa inteira e barra da marca em cima e embaixo. Sai quando o designer entregar o cartao proprio.',
         titulo: 'Cartão de link compartilhado — 1200×630',
         descricao: 'A arte 5555 · CONFIANÇA PARA FAZER ACONTECER existe, e é a certa — mas em 9:16. ' +
                    'O cartão de link é 1.91:1 e recorta pelo centro: sobram 29% da altura, e os ~30% de baixo, ' +

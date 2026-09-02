@@ -169,8 +169,12 @@
 .gn-chat {
   position: fixed; z-index: 41;
   right: clamp(14px, 2.4vw, 28px); bottom: calc(clamp(14px, 2.4vw, 28px) + 62px);
-  width: min(430px, calc(100vw - 28px));
-  max-height: min(70vh, 640px);
+  /* Medido em 01/09/2026: com o disclaimer no corpo, sobravam 216px de área de
+     leitura para respostas de 300 a 700 caracteres. É isso que transforma
+     texto longo em texto insuportável. O aviso subiu para o cabeçalho e a
+     janela cresceu — as duas coisas, porque uma só não resolvia. */
+  width: min(460px, calc(100vw - 28px));
+  max-height: min(82vh, 760px);
   display: flex; flex-direction: column;
   background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);
   box-shadow: 0 10px 30px rgba(12, 27, 46, .22);
@@ -191,6 +195,13 @@
 .gn-chat-cab span:not(.selo) {
   font-family: var(--f-t); font-size: .76rem; line-height: 1.25; color: var(--gn-areia);
 }
+.gn-chat-quem {
+  font-family: var(--f-t); font-size: inherit; color: #fff; cursor: pointer;
+  background: transparent; border: 0; padding: 0;
+  border-bottom: 1px solid rgba(255,255,255,.6);
+}
+.gn-chat-quem:hover { border-bottom-color: #fff; }
+
 .gn-chat-x {
   margin-left: auto; flex: none; cursor: pointer;
   background: transparent; border: 0; color: #fff;
@@ -271,6 +282,46 @@
   display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
 }
 .msg-tambem span { font-family: var(--f-t); font-size: .88rem; color: var(--gn-sombra); }
+
+/* ---------- resposta primeiro, detalhe depois ----------
+   A primeira linha da bolha É a resposta, e tem corpo maior que o resto. Antes
+   a resposta vinha diluída em cinco blocos de estatística. */
+.msg-curta {
+  font-family: var(--f-t); font-size: 1.02rem; line-height: 1.5; color: var(--gn-tinta);
+}
+.msg-bot > .msg-curta + p { margin-top: 8px; }
+
+/* A ressalva é o que a página NÃO sabe sobre uma coisa que ela tem. Dizer
+   "não tenho isso" quando se tem a obra e falta o valor é o defeito que esta
+   linha existe para impedir — então ela aparece, e aparece marcada. */
+.msg-ressalva {
+  font-family: var(--f-t); font-size: .88rem; line-height: 1.45;
+  color: var(--gn-azul-texto); border-left: 3px solid var(--gn-acao);
+  padding: 7px 11px; margin-top: 9px; background: var(--gn-gelo);
+}
+
+.msg-acao {
+  display: inline-block; margin-top: 12px; margin-right: 8px;
+  font-family: var(--f-d); font-weight: 600; font-size: .86rem; cursor: pointer;
+  background: var(--gn-acao); color: #fff; border: 0;
+  padding: 9px 15px; border-radius: var(--raio);
+}
+a.msg-acao { text-decoration: none; }
+.msg-acao:hover { background: var(--gn-azul); }
+.msg-mais:empty { display: none; }
+
+/* A mensagem montada no fluxo de demanda. Fica visível antes de ir embora:
+   ninguém manda o que não leu. */
+.msg-recado {
+  margin-top: 10px; padding: 12px 14px;
+  background: var(--gn-papel); border: 1px dashed var(--gn-sombra); border-radius: var(--raio);
+}
+.msg-recado p { font-family: var(--f-t); font-size: .95rem; line-height: 1.5; color: var(--gn-tinta); }
+.msg-recado-ok, .msg-mini {
+  font-family: var(--f-t); font-size: .82rem; line-height: 1.45;
+  color: var(--gn-sombra); margin-top: 9px;
+}
+.msg-recado-ok { color: var(--gn-azul-texto); font-weight: 600; }
 
 .resp {
   background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);

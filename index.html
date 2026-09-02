@@ -289,16 +289,17 @@
     <span class="selo">5555</span>
     <div>
       <b id="gn-chat-nome">Assistente 5555</b>
-      <span>Georgiano · Deputado Federal · Piauí</span>
+      <!-- O aviso continua, e numa linha só. Antes eram ~290 caracteres de
+           disclaimer ocupando a primeira tela inteira, antes de qualquer
+           informação sobre o candidato. Dito uma vez é credibilidade; dito em
+           toda resposta é uma campanha pedindo desculpa por existir. O texto
+           completo fica a um clique, em "quem responde aqui". -->
+      <span>assistente automático · não é o Georgiano · não é IA ·
+        <button class="gn-chat-quem" id="gn-chat-quem" type="button">quem responde aqui</button>
+      </span>
     </div>
     <button class="gn-chat-x" id="gn-chat-x" type="button" aria-label="Fechar o assistente">&times;</button>
   </header>
-
-  <!-- Aviso de identidade fixo. Quem abre o painel no meio da página precisa
-       saber com o que está falando sem ter de rolar para achar. -->
-  <p class="pergunte-aviso">Assistente automático da página.
-    <b>Não é o Georgiano falando</b>, e não é inteligência artificial:
-    responde só o que está registrado aqui, sempre com a fonte.</p>
 
   <div class="pergunte-corpo" id="pergunte-corpo" aria-live="polite"></div>
   <div class="sug" id="pergunte-sug"></div>

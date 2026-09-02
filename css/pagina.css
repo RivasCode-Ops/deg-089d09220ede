@@ -141,6 +141,84 @@
 }
 .pergunte-aviso b { font-family: var(--f-d); font-weight: 700; color: var(--gn-azul-texto); }
 
+.pergunte-convite { display: grid; gap: 16px; justify-items: start; }
+#pergunte-exemplos { margin-top: 0; }
+
+/* ---------- lançador fixo ----------
+   Fica visível em qualquer ponto da rolagem. Assistente que só existe numa
+   seção do meio da página é assistente que ninguém acha — foi exatamente o
+   que aconteceu na primeira versão. */
+.gn-lancador {
+  position: fixed; z-index: 40;
+  right: clamp(14px, 2.4vw, 28px); bottom: clamp(14px, 2.4vw, 28px);
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-d); font-weight: 700; font-size: .92rem;
+  background: var(--gn-acao); color: #fff;
+  border: 2px solid var(--gn-azul); border-radius: var(--raio);
+  padding: 11px 18px 11px 12px; cursor: pointer;
+  box-shadow: 0 3px 0 var(--gn-azul);
+}
+.gn-lancador:hover { background: var(--gn-azul); }
+.gn-lancador-selo {
+  font-stretch: var(--w-marca); font-weight: 800; font-size: .92rem;
+  letter-spacing: .03em; background: #fff; color: var(--gn-azul);
+  padding: 4px 8px 3px; border-radius: var(--raio);
+}
+
+/* ---------- painel ---------- */
+.gn-chat {
+  position: fixed; z-index: 41;
+  right: clamp(14px, 2.4vw, 28px); bottom: calc(clamp(14px, 2.4vw, 28px) + 62px);
+  width: min(430px, calc(100vw - 28px));
+  max-height: min(70vh, 640px);
+  display: flex; flex-direction: column;
+  background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);
+  box-shadow: 0 10px 30px rgba(12, 27, 46, .22);
+  padding: 0;
+}
+.gn-chat[hidden] { display: none; }
+
+.gn-chat-cab {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--gn-faixa); background-color: var(--gn-azul); color: #fff;
+  padding: 13px 14px;
+}
+.gn-chat-cab .selo { flex: none; }
+.gn-chat-cab div { display: grid; gap: 2px; min-width: 0; }
+.gn-chat-cab b {
+  font-stretch: var(--w-titulo); font-weight: 800; font-size: 1rem; line-height: 1.1;
+}
+.gn-chat-cab span:not(.selo) {
+  font-family: var(--f-t); font-size: .76rem; line-height: 1.25; color: var(--gn-areia);
+}
+.gn-chat-x {
+  margin-left: auto; flex: none; cursor: pointer;
+  background: transparent; border: 0; color: #fff;
+  font-size: 1.6rem; line-height: 1; padding: 0 4px;
+}
+
+.gn-chat .pergunte-aviso { margin: 12px 14px 0; }
+.gn-chat .pergunte-corpo { max-height: none; flex: 1; margin: 12px 14px 0; padding-right: 6px; }
+.gn-chat .sug { margin: 12px 14px 0; }
+.gn-chat .campo { margin: 12px 14px 14px; border-color: var(--gn-tinta); background: #fff; }
+.gn-chat .campo .txt { padding: 13px 14px; font-size: 1rem; color: var(--gn-tinta); }
+.gn-chat .campo .txt::placeholder { color: var(--gn-sombra); }
+.gn-chat .campo .go { padding: 0 18px; font-size: .88rem; }
+.gn-chat .msg { max-width: 100%; }
+
+@media (max-width: 560px) {
+  /* No celular o painel ocupa a tela: um cartão de 430px flutuando numa tela
+     de 390 vira um cartão cortado. */
+  .gn-chat {
+    left: 8px; right: 8px; bottom: 8px; top: 8px;
+    width: auto; max-height: none;
+  }
+  .gn-lancador-txt { display: none; }
+  /* Com o painel aberto em tela cheia, o lançador atrás dele não serve para
+     nada e ainda rouba o toque. */
+  body.gn-chat-aberto .gn-lancador { display: none; }
+}
+
 .pergunte-caixa {
   background: #FFFFFF; border: 2px solid var(--gn-tinta); border-radius: var(--raio);
   padding: 20px; max-width: 82ch;

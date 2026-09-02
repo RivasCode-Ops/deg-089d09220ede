@@ -478,11 +478,36 @@
 
   /* ---------- montagem ---------- */
 
+  /* ---------- lançador e painel ----------
+     O painel é um só, e fica fora do fluxo da página. A seção "Pergunte"
+     convida e dá exemplos; quem clica num exemplo abre o painel JÁ com a
+     pergunta feita. Duas conversas na mesma página seriam dois históricos
+     que se contradizem. */
+
+  var painel, lancador;
+
+  function abrir(foco) {
+    painel.hidden = false;
+    lancador.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('gn-chat-aberto');
+    if (foco !== false) { campo.focus(); }
+    rolar();
+  }
+
+  function fechar() {
+    painel.hidden = true;
+    lancador.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('gn-chat-aberto');
+    lancador.focus();
+  }
+
   function montar() {
     corpo = document.getElementById('pergunte-corpo');
     if (!corpo) { return; }
     campo = document.getElementById('pergunte-campo');
     chipsBox = document.getElementById('pergunte-sug');
+    painel = document.getElementById('gn-chat');
+    lancador = document.getElementById('gn-lancador');
 
     document.getElementById('pergunte-enviar').addEventListener('click', function () {
       perguntar(campo.value);
@@ -490,6 +515,32 @@
     campo.addEventListener('keydown', function (ev) {
       if (ev.key === 'Enter') { ev.preventDefault(); perguntar(campo.value); }
     });
+
+    if (painel && lancador) {
+      lancador.addEventListener('click', function () {
+        if (painel.hidden) { abrir(); } else { fechar(); }
+      });
+      document.getElementById('gn-chat-x').addEventListener('click', fechar);
+      /* ESC fecha. Painel que só fecha no X prende quem chegou por teclado. */
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && !painel.hidden) { fechar(); }
+      });
+    }
+
+    var abrirBt = document.getElementById('pergunte-abrir');
+    if (abrirBt) { abrirBt.addEventListener('click', function () { abrir(); }); }
+
+    /* Os exemplos da seção abrem o painel já perguntando — o convite não pode
+       levar a um painel vazio, senão a pessoa clica duas vezes para uma coisa. */
+    var exemplos = document.getElementById('pergunte-exemplos');
+    if (exemplos) {
+      sugestoesIniciais().forEach(function (t) {
+        var b = el('button', 'chip', t);
+        b.type = 'button';
+        b.addEventListener('click', function () { abrir(false); perguntar(t); });
+        exemplos.appendChild(b);
+      });
+    }
 
     var abertura = bolha('bot');
     abertura.appendChild(el('p', null,

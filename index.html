@@ -143,22 +143,13 @@
       que não sabe — em vez de inventar um número.</p>
   </div>
 
-  <div class="pergunte-caixa" id="pergunte-caixa">
-    <!-- Aviso de identidade fixo, no topo e sempre visível. Quem chega no meio
-         da conversa precisa saber com o que está falando sem ter de rolar. -->
-    <p class="pergunte-aviso">Assistente automático da página.
-      <b>Não é o Georgiano falando</b>, e não é inteligência artificial:
-      responde só o que está registrado aqui, sempre com a fonte.</p>
-
-    <div class="pergunte-corpo" id="pergunte-corpo" aria-live="polite"></div>
-    <div class="sug" id="pergunte-sug"></div>
-
-    <div class="campo">
-      <label class="sr" for="pergunte-campo" hidden>Sua pergunta</label>
-      <input class="txt" id="pergunte-campo" type="search" autocomplete="off"
-             placeholder="O que chegou na minha cidade?">
-      <button class="go" id="pergunte-enviar" type="button">Perguntar</button>
-    </div>
+  <!-- A conversa mora no painel flutuante, não aqui. Duas conversas na mesma
+       página seriam dois históricos que se contradizem: quem pergunta na
+       seção e depois abre o painel não encontraria o que acabou de perguntar.
+       Aqui ficam o convite e os exemplos, que abrem o painel já perguntando. -->
+  <div class="pergunte-convite">
+    <button class="btn" id="pergunte-abrir" type="button">Abrir o assistente</button>
+    <div class="sug" id="pergunte-exemplos"></div>
   </div>
 </div></section>
 
@@ -282,6 +273,43 @@
 </div></section>
 
 </main>
+
+<!-- ASSISTENTE — lançador fixo e painel.
+     O lançador fica visível em qualquer ponto da rolagem: assistente que só
+     existe numa seção do meio da página é assistente que ninguém acha. -->
+<button class="gn-lancador" id="gn-lancador" type="button"
+        aria-expanded="false" aria-controls="gn-chat">
+  <span class="gn-lancador-selo">5555</span>
+  <span class="gn-lancador-txt">Pergunte</span>
+</button>
+
+<aside class="gn-chat" id="gn-chat" role="dialog" aria-modal="false"
+       aria-labelledby="gn-chat-nome" hidden>
+  <header class="gn-chat-cab">
+    <span class="selo">5555</span>
+    <div>
+      <b id="gn-chat-nome">Assistente 5555</b>
+      <span>Georgiano · Deputado Federal · Piauí</span>
+    </div>
+    <button class="gn-chat-x" id="gn-chat-x" type="button" aria-label="Fechar o assistente">&times;</button>
+  </header>
+
+  <!-- Aviso de identidade fixo. Quem abre o painel no meio da página precisa
+       saber com o que está falando sem ter de rolar para achar. -->
+  <p class="pergunte-aviso">Assistente automático da página.
+    <b>Não é o Georgiano falando</b>, e não é inteligência artificial:
+    responde só o que está registrado aqui, sempre com a fonte.</p>
+
+  <div class="pergunte-corpo" id="pergunte-corpo" aria-live="polite"></div>
+  <div class="sug" id="pergunte-sug"></div>
+
+  <div class="campo">
+    <label class="sr" for="pergunte-campo" hidden>Sua pergunta</label>
+    <input class="txt" id="pergunte-campo" type="search" autocomplete="off"
+           placeholder="O que chegou na minha cidade?">
+    <button class="go" id="pergunte-enviar" type="button">Perguntar</button>
+  </div>
+</aside>
 
 <footer><div class="wrap">
   <div class="frow">

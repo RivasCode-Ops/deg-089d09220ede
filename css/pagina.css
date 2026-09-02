@@ -248,7 +248,16 @@ html { scroll-padding-top: calc(var(--topo-h) + 16px); scroll-behavior: smooth; 
    tamanho dele — mais honesto que esconder o lançador, que é o caminho de
    entrada do assistente. */
 @media (max-width: 720px) {
-  #resultado, .mold-controles, .agenda-lista { padding-bottom: 76px; }
+  /* Folga para o lançador fixo não cobrir o que está EMBAIXO da tela. Só
+     vale para bloco que de fato termina a seção. `.mold-controles` estava
+     nesta lista e não termina nada no celular — vêm depois dela o aviso, os
+     seletores e a prévia —, então os 76px viravam um buraco no meio da
+     seção.
+
+     E a moldura saiu da lista inteira: nada nela termina a página — depois
+     dela vem a seção de material —, então o lançador nunca prende nada ali.
+     Folga onde não há risco é buraco, não é cuidado. */
+  #resultado, .agenda-lista { padding-bottom: 76px; }
 }
 .gn-lancador-selo {
   font-stretch: var(--w-marca); font-weight: 800; font-size: .92rem;
@@ -859,9 +868,25 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
 .hero .acoes { margin-bottom: var(--e-5); }
 
 @media (max-width: 720px) {
-  /* Em tela estreita a faixa 2,23 vira um filete de 100px de altura e o rosto
-     some. Ela passa a recortar para uma razão que ainda mostra gente. */
-  .hero > .ph { aspect-ratio: 4 / 3; }
+  /* MEDIDO em 02/09/2026, dentro da própria arte: o lettering vai de x=60 a
+     x=1472 num arquivo de 1535×688, com 60px de margem à esquerda e 62 à
+     direita. Logo o corte máximo por lado é 60px e a RAZÃO MÍNIMA SEGURA é
+     2,057 — abaixo disso `cover` entra em cima de letra.
+
+     Aqui estava `4 / 3`, que é 1,333: recortava 130px de cada lado e cortava
+     o 5555 ao meio num celular de 390px. O número é o motivo de a arte estar
+     no hero; perder o número para ganhar altura é troca ruim.
+
+     Tentei 1415/688 (=2,057, o corte máximo calculado) e ainda encostava na
+     letra: o limiar de branco da medição não pega a antialiasagem, então a
+     extensão real do lettering é alguns pixels maior que a medida. Aqui não
+     há prêmio por espremer — 15px de altura não valem arriscar o número.
+     Fica a razão da própria arte, corte ZERO: 175px num aparelho de 390px.
+     Baixa, e inteira.
+
+     O conserto de verdade é de arte, não de CSS: pedir um recorte vertical
+     da mesma composição para o celular — está na lista do gabinete. */
+  .hero > .ph { aspect-ratio: 1535 / 688; }
 }
 
 /* ---------- o cartaz na proporção dele ----------
@@ -963,7 +988,13 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
 .etiq-inferido { border-style: dotted; text-decoration: underline; }
 
 /* ---------- C · números ---------- */
-.nums .fonte { color: #9FB4CE; }
+/* `.nums small{display:block}` mora em base.css e tem especificidade (0,1,1),
+   entao vence `.fonte{display:flex}` (0,1,0) mesmo carregando antes. Dentro
+   dos numeros a etiqueta deixava de ser item flex e virava caixa inline com
+   padding, invadindo a linha de cima — 3px de sobreposicao, visivel so quando
+   o nome da fonte e longo o bastante para quebrar em duas linhas. Por isso o
+   defeito aparecia no celular e nao no desktop. */
+.nums .fonte { color: #9FB4CE; display: flex; }
 
 /* ---------- B · busca ---------- */
 .campo .txt {

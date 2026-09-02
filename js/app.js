@@ -998,8 +998,22 @@
       img.src = url;
     }
 
+    /* No celular a prévia fica ~640px abaixo do botão: a pessoa escolhe a
+       foto e NADA muda na tela que ela está vendo. Levar a prévia para a
+       vista depois de carregar é o que faz a ação parecer ter acontecido.
+       Só quando o quadro está fora da tela — em desktop ele já está do lado,
+       e rolar ali seria movimento gratuito. */
+    function mostrarPrevia() {
+      var box = achar('.moldbox');
+      if (!box) { return; }
+      var k = box.getBoundingClientRect();
+      if (k.top >= 0 && k.bottom <= window.innerHeight) { return; }
+      box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
     entrada.addEventListener('change', function (e) {
       abrir(e.target.files && e.target.files[0]);
+      setTimeout(mostrarPrevia, 260);
     });
     tela.addEventListener('click', function () { if (!E.img) { entrada.click(); } });
     ['dragenter', 'dragover'].forEach(function (ev) {

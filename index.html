@@ -31,7 +31,7 @@
 
 <link rel="stylesheet" href="css/fontes.css?v=7cfc8710">
 <link rel="stylesheet" href="css/base.css?v=8cb54de2">
-<link rel="stylesheet" href="css/pagina.css?v=6ae510cc">
+<link rel="stylesheet" href="css/pagina.css?v=7ff86b39">
 </head>
 <body>
 
@@ -430,8 +430,35 @@
 <script src="dados/campanha.js?v=c3d9ddf7"></script>
 <script src="dados/mapa-piaui.js?v=2c659606"></script>
 <script src="dados/agenda.js?v=5ba8b600"></script>
-<script src="js/app.js?v=c304f774"></script>
+<script src="js/app.js?v=9f8656ea"></script>
 <script src="js/agenda.js?v=1972e4e2"></script>
 <script src="js/assistente.js?v=d975e366"></script>
+<!-- ============ VLIBRAS ============
+     Tradutor para Libras do Software Público Brasileiro. É a ÚNICA coisa
+     nesta página que fala com um servidor de fora, e a troca está escrita
+     em verificar.mjs, no HOSTS_PERMITIDOS: a linha do gov.br responde 302
+     para cdn.jsdelivr.net, então o IP de cada visitante vai para os dois.
+     Em troca, o site atende eleitor surdo.
+
+     position 'L' porque a direita é do lançador "5555 Pergunte" — dois
+     botões fixos no mesmo canto se cobrem, e o de baixo some.
+
+     Falha macia: se o gov.br estiver fora do ar, o script não define
+     window.VLibras e a chamada abaixo explodiria, levando junto qualquer
+     script posterior. O guard existe para o resto da página não cair com
+     ele — o site funciona inteiro sem Libras, só perde a tradução. -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  (function () {
+    if (!window.VLibras || !window.VLibras.Widget) { return; }
+    try {
+      new window.VLibras.Widget({ rootPath: 'https://vlibras.gov.br/app', position: 'L' });
+    } catch (e) { /* tradução é extra; página não cai por causa dela */ }
+  }());
+</script>
 </body>
 </html>

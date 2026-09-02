@@ -700,6 +700,36 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
   object-position: center;
 }
 
+/* ---------- o cartaz na proporção dele ----------
+   Contido dentro do quadro do hero, a arte ficava com 328px de largura e duas
+   faixas de azul nas laterais: proporção respeitada, destaque nenhum. Ela é a
+   peça da campanha — a que tem o 5555 — e num quadro emprestado ela nunca vai
+   ser o que é.
+
+   Então o quadro passa a ter a proporção DELA. O `.retrato .ph` do hero é
+   `position:absolute; inset:0` desde 31/08, justamente para a foto não mandar
+   na altura da linha; aqui a inversão é deliberada e limitada: a razão é fixa
+   (480/853), a altura é presa ao viewport, e a largura sai da altura. Não é
+   uma foto qualquer definindo a linha — é um cartaz de tamanho conhecido. */
+@media (min-width: 1081px) {
+  .retrato .ph.ph-poster {
+    position: static; inset: auto;
+    aspect-ratio: 480 / 853;
+    height: min(78vh, 820px); width: auto;
+    margin-left: auto; margin-right: auto;
+  }
+  .retrato:has(.ph-poster) { align-self: start; }
+}
+@media (max-width: 1080px) {
+  .retrato .ph.ph-poster {
+    height: auto; aspect-ratio: 480 / 853; max-height: 78vh;
+    margin-left: auto; margin-right: auto;
+  }
+}
+/* Com a caixa na razão da arte não sobra faixa: `cover` e `contain` dão a
+   mesma coisa, e `cover` evita meio pixel de fresta no arredondamento. */
+.ph-cheia.ph-poster img { object-fit: cover; }
+
 /* ---------- foto pequena demais para o quadro ----------
    O hero pede 1400px de largura. Com um arquivo de 180px, `cover` amplia
    quase 4× e o resultado parece defeito de código, não falta de acervo.

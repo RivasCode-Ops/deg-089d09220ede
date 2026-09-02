@@ -579,6 +579,13 @@
     var abrirBt = document.getElementById('pergunte-abrir');
     if (abrirBt) { abrirBt.addEventListener('click', function () { abrir(); }); }
 
+    /* Os três CTAs de participação abrem direto o fluxo de demanda — não a
+       conversa vazia. Quem clicou em "mandar uma mensagem" já decidiu; pedir
+       que digite a pergunta de novo é perder a decisão no meio do caminho. */
+    [].forEach.call(document.querySelectorAll('.gn-cta-bt'), function (b) {
+      b.addEventListener('click', function () { abrir(false); abreDemanda(); });
+    });
+
     var exemplos = document.getElementById('pergunte-exemplos');
     if (exemplos) {
       sugestoes().forEach(function (t) {

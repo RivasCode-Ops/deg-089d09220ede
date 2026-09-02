@@ -281,6 +281,23 @@
                    'sai com CNPJ e tiragem por exigência legal. É a pendência 1.' }
     ],
 
+    /* Os QUATRO números que a página põe em corpo grande.
+     *
+     * Eles não trazem valor nenhum escrito aqui: apontam para registros que já
+     * existem acima, e o app resolve na hora. Número em dois lugares vira dois
+     * números diferentes no dia em que alguém corrige um só.
+     *
+     * A escolha é editorial e é o ponto: dez indicadores pequenos não dizem
+     * nada: quatro grandes dizem uma coisa. A cobertura (19 de 224) fica no
+     * mapa, que é onde ela significa alguma coisa.
+     */
+    destaques: [
+      { de: 'voto',    ano: 2022,               rotulo: 'votos em 2022' },
+      { de: 'mandato', chave: 'leis',           rotulo: 'leis de autoria' },
+      { de: 'entrega', id: 'pac-saude-17',      rotulo: 'municípios com entrega de saúde' },
+      { de: 'entrega', id: 'tratores-80',       rotulo: 'tratores entregues' }
+    ],
+
     /* Atividade parlamentar na ALEPI — três mandatos, 2015 a 2026.
      *
      * Lida no SAPL, o sistema oficial da Assembleia, em 01/09/2026. Isto é o

@@ -71,11 +71,16 @@
 <section class="hero" id="topo"><div class="wrap">
   <div>
     <p class="eyebrow">Deputado Federal · Piauí · PSD</p>
-    <h1>O sertão<br>não pede<br><em>favor.</em><br>Cobra<br>entrega.</h1>
+    <!-- Duas linhas, não cinco. A manchete em cinco linhas obrigava corpo
+         pequeno para caber; em duas ela pode dobrar de tamanho no mesmo
+         espaço. Maior com menos linhas, não mais linhas menores. -->
+    <h1>O sertão não pede <em>favor.</em><br>Cobra entrega.</h1>
     <p class="tese">Três eleições para a Assembleia, a última com 109.025 votos. O que chegou na sua cidade está listado aqui — cada item com a fonte ao lado.</p>
     <div class="acoes">
-      <a class="btn" href="#cidade">Ver o que chegou na minha cidade</a>
-      <a class="btn ghost" href="#quem">Conhecer o Georgiano</a>
+      <!-- Texto curto e ação clara. "Ver o que chegou na minha cidade" tinha
+           34 caracteres e quebrava em duas linhas no celular. -->
+      <a class="btn" href="#cidade">Ver a minha cidade</a>
+      <a class="btn ghost" href="#quem">Quem é o Georgiano</a>
     </div>
   </div>
   <div class="retrato">
@@ -128,6 +133,15 @@
   </div>
 </div></section>
 
+
+<!-- CTA de participação. Três momentos naturais: depois do mapa, depois das
+     entregas e no fim. O botão abre o assistente no fluxo de demanda — que é
+     o caminho de participação que existe enquanto o grupo não tem URL. -->
+<section class="gn-cta"><div class="wrap">
+  <p>A sua cidade não está no mapa? Diga o que falta lá.</p>
+  <button class="btn gn-cta-bt" type="button">Falar com o gabinete</button>
+</div></section>
+
 <!-- B3 · PERGUNTE — assistente de perguntas.
      NÃO é um modelo de linguagem: é recuperação. Casa a pergunta com um
      registro de dados/campanha.js e devolve o registro com a fonte ao lado.
@@ -161,6 +175,15 @@
   <div class="mark"><b>O que chegou perto de você</b><span>5555 · 03</span></div>
   <div class="grid3" id="entregas"></div>
   <p class="entregas-nota" id="entregas-nota"></p>
+</div></section>
+
+
+<!-- CTA de participação. Três momentos naturais: depois do mapa, depois das
+     entregas e no fim. O botão abre o assistente no fluxo de demanda — que é
+     o caminho de participação que existe enquanto o grupo não tem URL. -->
+<section class="gn-cta"><div class="wrap">
+  <p>Chegou alguma dessas coisas na sua cidade? Conte para o gabinete.</p>
+  <button class="btn gn-cta-bt" type="button">Mandar uma mensagem</button>
 </div></section>
 
 <!-- E · QUEM É -->
@@ -311,6 +334,15 @@
     <button class="go" id="pergunte-enviar" type="button">Perguntar</button>
   </div>
 </aside>
+
+
+<!-- CTA de participação. Três momentos naturais: depois do mapa, depois das
+     entregas e no fim. O botão abre o assistente no fluxo de demanda — que é
+     o caminho de participação que existe enquanto o grupo não tem URL. -->
+<section class="gn-cta"><div class="wrap">
+  <p>Quer cobrar uma entrega ou pedir alguma coisa para a sua cidade?</p>
+  <button class="btn gn-cta-bt" type="button">Mandar uma mensagem</button>
+</div></section>
 
 <footer><div class="wrap">
   <div class="frow">

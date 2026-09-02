@@ -133,13 +133,43 @@
 
   /* ---------- C · números de autoridade ---------- */
 
+  /* Os quatro destaques resolvem para registros que já existem — voto, item de
+     mandato ou entrega. Nenhum valor é escrito em dados/campanha.js → destaques
+     nem aqui: número em dois lugares vira dois números diferentes no dia em que
+     alguém corrige um só. Se um destaque apontar para registro que sumiu, a
+     página diz isso em vez de mostrar um bloco vazio. */
+
+  function resolverDestaque(d) {
+    if (d.de === 'voto') {
+      var v = D.votos.filter(function (x) { return x.ano === d.ano; })[0];
+      return v && { valor: v.valor, legenda: v.legenda, entrada: v };
+    }
+    if (d.de === 'mandato') {
+      var m = D.mandato && D.mandato.itens.filter(function (x) { return x.chave === d.chave; })[0];
+      return m && { valor: m.valor, legenda: m.nota, entrada: D.mandato };
+    }
+    if (d.de === 'entrega') {
+      var e = D.entregas.filter(function (x) { return x.id === d.id; })[0];
+      return e && { valor: e.destaque, legenda: e.titulo, entrada: e };
+    }
+    return null;
+  }
+
   function numeros() {
     var alvo = achar('#nums');
-    D.votos.forEach(function (v) {
+    D.destaques.forEach(function (d) {
+      var r = resolverDestaque(d);
       var bloco = el('div');
-      bloco.appendChild(el('strong', 'num', v.valor));
-      bloco.appendChild(el('p', null, 'votos em ' + v.ano + ' — ' + v.legenda));
-      bloco.appendChild(fonteLinha(v));
+      if (!r || !r.valor) {
+        bloco.className = 'num-quebrado';
+        bloco.appendChild(el('p', null, 'Destaque sem registro: ' + JSON.stringify(d)));
+        alvo.appendChild(bloco);
+        return;
+      }
+      bloco.appendChild(el('strong', 'num', r.valor));
+      bloco.appendChild(el('b', null, d.rotulo));
+      bloco.appendChild(el('p', null, r.legenda));
+      bloco.appendChild(fonteLinha(r.entrada));
       alvo.appendChild(bloco);
     });
   }

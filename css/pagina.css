@@ -406,13 +406,128 @@ a.msg-acao { text-decoration: none; }
 @media (max-width: 1080px) { .mandato-topo { grid-template-columns: 1fr; gap: var(--e-3); } }
 @media (max-width: 720px) { .mandato h2 { font-size: 1.9rem; } }
 
+/* ==========================================================================
+   ESCALA — 02/09/2026
+   O pedido foi "mais grande, não mais poluído": aumentar poucas coisas em vez
+   de acrescentar muitas. Cada regra abaixo aumenta ALGO que já existia; não
+   há elemento novo nesta seção.
+   ========================================================================== */
+
+/* 1 · A FOTO VIRA PRESENÇA.
+   A coluna do retrato era .85fr contra 1.15fr do texto — retrato
+   institucional ao lado da manchete. Vira metade da tela.
+   TETO: o arquivo tem 309px de largura útil. A 1fr/1fr a coluna dá ~560px,
+   que é 1,8× de ampliação. Passar disso é borrão, e o slot já pede 1400px na
+   pendência de acervo. A escala aqui bateu no limite do arquivo, não no do
+   desenho. */
+/* 1.05fr/0.95fr, e nao 1fr/1fr: a foto tinha de crescer (era .85fr) e a
+   manchete tinha de caber em menos linhas. Coluna mais estreita com fonte
+   maior quebra MAIS, nao menos — as duas coisas brigam, e o ponto de
+   equilibrio foi medido, nao chutado. */
+@media (min-width: 1081px) {
+  .hero .wrap { grid-template-columns: 1.05fr .95fr; }
+}
+
+/* 2 · O NÚMERO VIRA ELEMENTO GRÁFICO.
+   Era marca d'água a 12% no rodapé do hero. Passa a ocupar a largura e a ter
+   presença — mas atrás do conteúdo, e não competindo com ele. */
+/* Alta o bastante para ser elemento grafico, baixa o bastante para nao
+   encostar no texto: os numeros ficam cortados pelo overflow do bloco, e o
+   que aparece e a faixa de cima deles. */
+.bleed5 { height: clamp(80px, 9vw, 140px); }
+.bleed5 b {
+  font-size: clamp(9rem, 24vw, 24rem);
+  opacity: .14;
+  color: var(--gn-azul);
+}
+
+/* 3 · TÍTULOS MAIORES, MENOS LINHAS.
+   A manchete passou de cinco linhas para duas no HTML; aqui ela cresce para
+   ocupar o espaço que as linhas devolveram. */
+.hero h1 { font-size: clamp(3rem, 6vw, 5rem); line-height: .9; }
+.hero .tese { font-size: 1.45rem; max-width: 34ch; }
+.busca h2, .mapa h2, .mandato h2, .pergunte h2, .divulgar h2, .bio h2, .metas h2, .mold h2 {
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+}
+
+/* 4 · BOTÕES COM ALVO DE TOQUE DE VERDADE.
+   48px é o piso do alvo de toque; abaixo disso o dedo erra. Antes o .btn
+   media ~50px no desktop e caía para ~46px no celular, que é onde importa. */
+.btn, .mold-arquivo, #mold-baixar, #mold-compartilhar, .campo .go {
+  min-height: 52px; display: inline-flex; align-items: center; justify-content: center;
+}
+@media (max-width: 720px) {
+  .btn, .mold-arquivo, #mold-baixar, #mold-compartilhar {
+    min-height: 56px; font-size: .95rem; padding: 15px 22px;
+  }
+  .acoes { gap: 12px; }
+  .acoes .btn { flex: 1 1 100%; }
+}
+
+/* 5 · MENOS CARTÕES POR LINHA, IMAGEM MAIOR.
+   Três colunas davam foto de 158px de altura — miniatura. Duas colunas dão
+   quase o dobro, e a foto passa a ser a coisa que se vê primeiro no cartão. */
+@media (min-width: 721px) {
+  .grid3 { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  .card .ph { min-height: 300px; }
+}
+@media (min-width: 1200px) {
+  .card .ph { min-height: 340px; }
+}
+
+/* 6 · QUATRO NÚMEROS FORTES.
+   Eram três votações numa faixa e cinco indicadores do mandato noutra — oito
+   números pequenos. Agora são quatro grandes na faixa, e os do mandato ficam
+   na seção deles, que é onde o detalhe pertence. */
+.nums .wrap { grid-template-columns: repeat(4, 1fr); }
+.nums strong { font-size: clamp(2.6rem, 4.6vw, 4.2rem); }
+.nums div b {
+  display: block; margin-top: 10px;
+  font-stretch: var(--w-rotulo); font-weight: 700; font-size: .76rem;
+  letter-spacing: .12em; text-transform: uppercase; color: #fff;
+}
+.nums p { font-size: .92rem; margin-top: 6px; }
+.num-quebrado {
+  border: 2px dashed #fff; padding: 14px; color: #fff;
+  font-family: var(--f-t); font-size: .85rem;
+}
+@media (max-width: 1080px) { .nums .wrap { grid-template-columns: repeat(2, 1fr); gap: 34px; } }
+@media (max-width: 560px)  { .nums .wrap { grid-template-columns: 1fr; } }
+
+/* 7 · O MAPA VIRA PROTAGONISTA.
+   Era .85fr numa coluna lateral: 420px de mapa com o texto ocupando mais
+   espaço que ele. Inverte — o mapa manda e o texto acompanha. */
+.mapa-tela svg { margin: 0 auto; }
+
+/* 8 · A PARTICIPAÇÃO APARECE TRÊS VEZES.
+   Uma vez no topo não converte: quem decide participar decide depois de ler
+   alguma coisa. Os três momentos são naturais — depois do mapa (viu que a
+   cidade dele não está), depois das entregas (viu o que chegou) e no fim. */
+.gn-cta {
+  background: var(--gn-faixa); background-color: var(--gn-azul); color: #fff;
+  border-top: 2px solid var(--gn-tinta); border-bottom: 2px solid var(--gn-tinta);
+}
+.gn-cta .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--e-3); flex-wrap: wrap;
+  padding-top: var(--e-4); padding-bottom: var(--e-4);
+}
+.gn-cta p {
+  font-stretch: var(--w-titulo); font-weight: 700;
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem); line-height: 1.15; max-width: 26ch;
+}
+.gn-cta .btn { background: #fff; color: var(--gn-azul); }
+.gn-cta .btn:hover { background: var(--gn-areia); }
+
 /* ---------- B2 · mapa do Piauí ----------
    O mapa fica sobre fundo claro, e não sobre o azul das seções vizinhas:
    município marcado é pintado no azul do sistema, e azul sobre azul não é
    mapa, é mancha. */
 
 .mapa { background: #FFFFFF; border-top: 2px solid var(--gn-tinta); border-bottom: 2px solid var(--gn-tinta); }
-.mapa-bloco { display: grid; grid-template-columns: .85fr 1.15fr; gap: var(--e-5); align-items: start; }
+/* O mapa manda: 1.35fr contra .65fr do texto. Era o contrario — 420px de
+   mapa com o texto ocupando mais espaco que ele. */
+.mapa-bloco { display: grid; grid-template-columns: 1.35fr .65fr; gap: var(--e-5); align-items: start; }
 
 .mapa-tela svg { width: 100%; height: auto; display: block; }
 .mapa-tela path { stroke: var(--gn-tinta); stroke-width: 1.1; vector-effect: non-scaling-stroke; }

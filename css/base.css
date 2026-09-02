@@ -45,6 +45,9 @@ header{position:sticky;top:0;z-index:9;background:var(--gn-papel);border-bottom:
 /* lockup oficial no lugar do nome desenhado em fonte. Altura fixa e largura
    automatica: a razao do recorte e 3.098:1 e quem manda e a altura da barra. */
 .logo .marca{display:block;height:44px;width:auto;border-radius:var(--raio)}
+/* O numero da campanha, em degrade e com fundo recortado. Sem placa e sem
+   raio: ele nao e botao, e o proprio desenho. */
+.logo .numero{display:block;height:44px;width:auto}
 .selo{background:var(--gn-ocre);color:#fff;font-stretch:var(--w-marca);font-weight:800;font-size:1.02rem;letter-spacing:.04em;padding:7px 11px 6px;border-radius:var(--raio)}
 nav{margin-left:auto;display:flex;gap:26px;font-size:.86rem;font-weight:500}
 nav a{padding-bottom:3px;border-bottom:2px solid transparent}

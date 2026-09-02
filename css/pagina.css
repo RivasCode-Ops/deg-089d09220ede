@@ -96,6 +96,29 @@ html { scroll-padding-top: calc(var(--topo-h) + 16px); scroll-behavior: smooth; 
    O `header` do mockup era `sticky` sozinho. Com duas faixas acima dele,
    empilhar três `sticky:top:0` faz as três se sobreporem no mesmo pixel.
    Um contêiner só resolve sem número mágico: o que gruda é o bloco. */
+/* SÓ PARA LEITOR DE TELA. Não usar display:none nem visibility:hidden —
+   os dois tiram o elemento da árvore de acessibilidade também, que é
+   exatamente o contrário do que se quer aqui. */
+.so-leitor {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* PULAR PARA O CONTEÚDO. Fica fora da tela até receber foco; ao receber,
+   desce por cima de tudo — z-index acima da faixa, senão ele aparece ATRÁS
+   do sticky e o teclado anuncia um link que ninguém vê. */
+.pular {
+  position: fixed; top: -100px; left: 12px; z-index: 40;
+  background: var(--gn-azul); color: #fff; font-weight: 700; font-size: .92rem;
+  padding: 12px 20px; border-radius: var(--raio);
+  box-shadow: 0 6px 22px rgba(12, 27, 46, .34);
+  transition: top .12s ease-out;
+}
+.pular:focus { top: 12px; }
+/* O alvo do pulo recebe foco por script (tabindex -1) e não deve piscar
+   contorno de campo de texto por isso. */
+#conteudo:focus { outline: none; }
+
 .topo { position: sticky; top: 0; z-index: 20; }
 .topo header { position: static; }
 

@@ -30,8 +30,8 @@
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="stylesheet" href="css/fontes.css?v=7cfc8710">
-<link rel="stylesheet" href="css/base.css?v=8f334af7">
-<link rel="stylesheet" href="css/pagina.css?v=a4b59cb8">
+<link rel="stylesheet" href="css/base.css?v=8cb54de2">
+<link rel="stylesheet" href="css/pagina.css?v=6ae510cc">
 </head>
 <body>
 
@@ -39,6 +39,12 @@
      Um só contêiner `sticky` em vez de três — assim nenhuma barra precisa
      saber a altura da outra, que é o que quebra quando o texto quebra em
      duas linhas no celular. -->
+<!-- PULAR PARA O CONTEÚDO. Antes da faixa, porque tem de ser o primeiro
+     alvo do Tab: quem navega por teclado atravessava as duas tarjas, o logo,
+     o número, nove links de menu e o botão do grupo antes de chegar ao texto,
+     em toda seção que abrisse. Só aparece com foco — não é enfeite de tela. -->
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
 <div class="topo">
 
 <!-- Faixa de demonstração. Não fecha e não esconde: quem receber o link tem de
@@ -62,7 +68,16 @@
   <div class="logo">
     <img class="marca" src="img/lockup-cabecalho.jpg" width="137" height="44"
          alt="Deputado Federal Georgiano">
-    <span class="selo">5555</span>
+    <!-- O 5555 tambem veio da campanha (866x384, COM EXIF — o primeiro
+         arquivo que chega com procedencia). O branco em volta saiu por
+         preenchimento a partir da borda, nao por limiar: limiar em
+         "quase branco" comeria os brilhos claros DENTRO dos algarismos.
+         O slogan de baixo ficou fora — a caixa dos algarismos e 792x266
+         dentro da arte, achada pela primeira linha vazia. WebP porque o
+         PNG do mesmo recorte pesava 49,8 kB contra 13,0 kB, sem diferenca
+         visivel a 2x. -->
+    <img class="numero" src="img/numero-5555.webp" width="131" height="44"
+         alt="5555">
   </div>
   <!-- Abaixo de 721px o nav estava escondido e não havia nada no lugar: no
        aparelho onde a maior parte do eleitorado abre o site, não dava para
@@ -89,7 +104,7 @@
 
 </div><!-- /.topo -->
 
-<main>
+<main id="conteudo" tabindex="-1">
 
 <!-- A · ABERTURA -->
 <!-- A arte de campanha é uma FAIXA 2,23:1, não um retrato de coluna. Numa
@@ -295,6 +310,10 @@
 
       <fieldset class="mold-passo">
         <legend>Frase</legend>
+        <!-- <legend> dá contexto de grupo, não nome ao campo: o leitor de tela
+             anunciava "caixa de combinação" e mais nada. O rótulo visível já é
+             a legenda, então o <label> aqui é só para a leitura. -->
+        <label class="so-leitor" for="mold-frase">Frase da moldura</label>
         <select id="mold-frase"></select>
       </fieldset>
 

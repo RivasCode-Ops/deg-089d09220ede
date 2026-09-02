@@ -680,6 +680,26 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
   .retrato { max-width: 420px; margin-left: auto; margin-right: auto; }
 }
 
+/* ---------- cartaz ----------
+   A arte de campanha é uma composição 9:16 fechada: retrato, lockup e o 5555.
+   `cover` num quadro mais largo que ela corta pela altura — e o que sai no
+   corte é justamente o número, que é o motivo de a arte estar no hero. Entra
+   contida, sobre a cor da marca, e a moldura fica sendo o próprio azul. */
+/* NÃO usar grid aqui. Medido em 02/09/2026: com `display:grid` a faixa é
+   dimensionada pelo conteúdo, `height:100%` volta a ser auto e a imagem fica
+   no tamanho natural — 480×853 dentro de uma caixa de 490×584, cortada pelo
+   overflow. É a mesma armadilha do conserto do hero de 31/08, e ela reaparece
+   toda vez que se centraliza com grid. O bloco continua bloco; quem centraliza
+   é o `object-fit`. */
+.ph-cheia.ph-poster {
+  background: var(--gn-faixa); background-color: var(--gn-azul);
+}
+.ph-cheia.ph-poster img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
 /* ---------- foto pequena demais para o quadro ----------
    O hero pede 1400px de largura. Com um arquivo de 180px, `cover` amplia
    quase 4× e o resultado parece defeito de código, não falta de acervo.
@@ -705,6 +725,9 @@ button.mat-acao { font-family: var(--f-d); border: 0; cursor: pointer; }
    cima da imagem. O `em` só aparece onde há altura para ele — no cartão de
    158px a faixa comeria a foto inteira. */
 .ph-provisoria { position: relative; }
+/* No cartaz a tarja sobe. Embaixo ela cobria exatamente o 5555 — o motivo de
+   a arte estar no hero. No topo ela cobre ceu. */
+.ph-poster .ph-tarja { top: 0; bottom: auto; }
 .ph-tarja {
   position: absolute; left: 0; right: 0; bottom: 0;
   background: var(--gn-acao); color: #fff;

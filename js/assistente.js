@@ -100,16 +100,71 @@
     return D.canais.filter(function (c) { return c.id === 'whatsapp' && c.url; })[0] || null;
   }
 
+  /* ---------- casamento ----------
+     Teste real com 19 consultas em 02/09/2026: o motor acertava 8. As três
+     falhas mais prováveis do público real eram as mais simples — "barra",
+     "jaico" e "sao raimundo" não casavam, porque o casamento exigia o nome
+     inteiro dentro da pergunta.
+
+     Cada assunto agora devolve PESO, e quem lidera é o de maior peso — não o
+     primeiro da lista. Antes, "sao raimundo nonato" abria com uma entrega
+     genérica e o município ia para o rodapé de "você também perguntou". */
+
+  var PARTICULAS = { de: 1, da: 1, do: 1, das: 1, dos: 1, e: 1, o: 1, a: 1,
+                     os: 1, as: 1, em: 1, no: 1, na: 1, um: 1, uma: 1, que: 1,
+                     qual: 1, quais: 1, me: 1, pra: 1, para: 1, por: 1, com: 1,
+                     sobre: 1, ele: 1, dele: 1, sao: 1, foi: 1, ja: 1, se: 1 };
+
+  function fichas(q) {
+    return q.split(/[^a-z0-9]+/).filter(function (t) {
+      return t.length >= 3 && !PARTICULAS[t];
+    });
+  }
+
+  /* Prefixo, e não só nome inteiro: no celular, com teclado pequeno, o
+     eleitor de Barras digita "barra". Mínimo de 4 letras porque abaixo disso
+     o prefixo casa com meio estado — "sao" sozinho pega 24 municípios. */
+  function casaNome(fs, nomeChave) {
+    var palavras = nomeChave.split(/\s+/);
+    var significativas = palavras.filter(function (w) { return w.length >= 4 && !PARTICULAS[w]; });
+    var forte = 0, fraco = 0, cobertas = {};
+    fs.forEach(function (t) {
+      if (nomeChave === t) {
+        forte += 3;
+        significativas.forEach(function (w) { cobertas[w] = 1; });
+        return;
+      }
+      if (palavras.indexOf(t) !== -1) { forte += 2; cobertas[t] = 1; return; }
+      if (t.length >= 4) {
+        var pre = palavras.filter(function (w) { return w.indexOf(t) === 0; })[0];
+        if (pre) { fraco += 1; cobertas[pre] = 1; }
+      }
+    });
+    /* Cobertura nos DOIS sentidos. "raimundo nonato" cobre todas as palavras
+       significativas de São Raimundo Nonato — a pergunta É o nome, e o
+       município tem de liderar. "agua" cobre metade de Água Branca: é palavra
+       de tema que por acaso abre um nome de cidade, e ali quem manda é a
+       pauta. Sem essa distinção, "sao raimundo nonato" abria com uma entrega
+       genérica e o município ia para o rodapé de "você também perguntou". */
+    var nomeCoberto = significativas.length > 0 &&
+      significativas.every(function (w) { return cobertas[w]; });
+    return { forte: forte, fraco: fraco, nomeCoberto: nomeCoberto };
+  }
+
   /* ---------- assuntos ----------
      Cada um devolve { titulo, curta, detalhe(alvo), entrada, chips, saida(alvo) }
      ou null. `curta` é A RESPOSTA — uma frase. O resto é opcional e vem
      atrás de um botão. */
 
   function identidade(q) {
-    if (!/\b(voce e|voce eh|e voce|voce fala|e o georgiano|eh o georgiano|robo|bot|inteligencia|humano|quem e voce|quem responde|com quem)/.test(q)) {
+    /* SÓ segunda pessoa. Antes bastava "o georgiano" na frase, então "quem é
+       o Georgiano" — que pede a biografia — recebia a negação de "você é o
+       Georgiano?". Além de não responder, soava ríspido. */
+    if (!/\b(voce e|voce eh|e voce|voce fala|voce nao|vc |robo|bot|inteligencia artificial|\bia\b|humano|quem e voce|quem responde|com quem eu|com quem estou)/.test(q)) {
       return null;
     }
     return {
+      peso: 95,
       titulo: null,
       curta: 'Não. Sou um assistente automático da página — o Georgiano não fala por aqui, e eu não invento resposta.',
       chips: ['O que chegou na minha cidade?', 'Quantas leis ele fez?']
@@ -123,21 +178,37 @@
     var achou = null, melhor = 0;
     D.entregas.filter(function (e) { return e.publicar; }).forEach(function (e) {
       var campos = [e.titulo, e.tag, e.contexto, e.cidades.join(' ')].join(' ');
-      var termos = chave(campos).split(/[^a-z0-9]+/)
-        .filter(function (t) { return t.length >= 5; });
+      var limpo = chave(campos);
+      var termos = limpo.split(/[^a-z0-9]+/).filter(function (t) { return t.length >= 5; });
       var pontos = 0;
       termos.forEach(function (t) { if (q.indexOf(t) !== -1) { pontos++; } });
+      /* Par de palavras vizinhas vale mais que duas soltas: "varzea queimada"
+         na pergunta e um povoado, e nao a soma de Varzea Grande com Queimada
+         Nova. Sem isto, o municipio ganhava da obra por coincidencia. */
+      for (var k = 0; k < termos.length - 1; k++) {
+        var par = termos[k] + ' ' + termos[k + 1];
+        if (limpo.indexOf(par) !== -1 && q.indexOf(par) !== -1) { pontos += 3; }
+      }
       if (pontos > melhor) { melhor = pontos; achou = e; }
     });
     if (!achou || melhor < 2) { return null; }
 
     var e = achou;
-    var onde = e.cidades.length ? ' em ' + e.cidades.slice(0, 2).join(' e ') : '';
-    var curta = e.destaque
-      ? e.destaque + ' ' + e.unidade + onde + '.'
-      : e.titulo + onde + '.';
+    /* "17 municípios atendidos em Acauã e Domingos Mourão" lido literalmente é
+       contradição: são 17, não 2. "entre eles" resolve, e só entra quando há
+       mais cidades do que as citadas. */
+    var curta;
+    if (e.destaque) {
+      var mostra = e.cidades.slice(0, 3).join(', ');
+      curta = e.destaque + ' ' + e.unidade +
+        (e.cidades.length > 3 ? ' — entre eles ' + mostra + '.'
+          : e.cidades.length ? ' — ' + mostra + '.' : '.');
+    } else {
+      curta = e.titulo + (e.cidades.length ? ' em ' + e.cidades.slice(0, 2).join(' e ') : '') + '.';
+    }
 
     return {
+      peso: 50 + melhor * 14,
       titulo: e.destaque ? e.titulo : null,
       curta: curta,
       /* A ressalva é a parte mais importante desta resposta: é ela que diz o
@@ -152,12 +223,57 @@
   }
 
   function municipio(q) {
-    var achou = null;
+    var fs = fichas(q);
+    if (!fs.length) { return null; }
+
+    var comEntrega = [], soNoMapa = [];
     GN.indice.forEach(function (v, k) {
-      if (!achou && k.length >= 4 && q.indexOf(k) !== -1) { achou = v; }
+      var m = casaNome(fs, k);
+      if (m.forte || m.fraco) { comEntrega.push({ v: v, m: m, k: k }); }
     });
-    if (achou) {
+    var M = window.MAPA_PI;
+    if (M) {
+      M.municipios.forEach(function (x) {
+        if (GN.indice.get(x.k)) { return; }
+        var m = casaNome(fs, x.k);
+        if (m.forte || m.fraco) { soNoMapa.push({ x: x, m: m }); }
+      });
+    }
+
+    var todos = comEntrega.map(function (c) { return { nome: c.v.nome, forte: c.m.forte, fraco: c.m.fraco, pleno: c.m.nomeCoberto, v: c.v }; })
+      .concat(soNoMapa.map(function (c) { return { nome: c.x.n, forte: c.m.forte, fraco: c.m.fraco, pleno: c.m.nomeCoberto, v: null }; }));
+    if (!todos.length) { return null; }
+
+    todos.sort(function (a, b) { return (b.forte - a.forte) || (b.fraco - a.fraco) || a.nome.localeCompare(b.nome, 'pt-BR'); });
+
+    /* Desambiguação: "barra" casa Barras E Barra D'Alcântara. Escolher um dos
+       dois no escuro é pior que perguntar — e a pergunta é uma linha. */
+    var topo = todos[0];
+    var empatados = todos.filter(function (t) { return t.forte === topo.forte && t.fraco === topo.fraco; });
+    /* Desambiguar so quando a pergunta E praticamente o nome. Em "quanto custou
+       o asfalto de varzea queimada" o prefixo pegava Queimada Nova, Varzea
+       Branca e Varzea Grande — e a resposta certa era a obra, que o casador de
+       entrega tinha. Pergunta longa com casamento so por prefixo e evidencia
+       fraca, nao lista de escolha. */
+    void empatados;
+    /* Desambiguar quando a pergunta E praticamente o nome e ha mais de um
+       candidato — nao so quando eles empatam. "barra" casa EXATO com Barra
+       D'Alcantara e por PREFIXO com Barras: nao empatam, e mesmo assim quem
+       digitou precisa escolher. Em pergunta longa nao se pergunta: ali o
+       casamento por prefixo e evidencia fraca demais para virar uma escolha. */
+    if (fs.length <= 2 && todos.length > 1 && todos.length <= 6) {
       return {
+        peso: 88,
+        titulo: null,
+        curta: 'Você quis dizer ' + todos.map(function (t) { return t.nome; }).join(', ') + '?',
+        chips: todos.map(function (t) { return t.nome; })
+      };
+    }
+
+    if (topo.v) {
+      var achou = topo.v;
+      return {
+        peso: (topo.pleno && topo.forte) ? 130 : (topo.forte ? 72 : 68),
         titulo: achou.nome,
         curta: achou.itens.length === 1
           ? 'Uma entrega listada em ' + achou.nome + '.'
@@ -170,17 +286,11 @@
       };
     }
 
-    var M = window.MAPA_PI, fora = null;
-    if (M) {
-      M.municipios.forEach(function (m) {
-        if (!fora && m.k.length >= 4 && q.indexOf(m.k) !== -1) { fora = m; }
-      });
-    }
-    if (!fora) { return null; }
     return {
-      titulo: fora.n,
-      curta: 'Ainda não há entrega listada em ' + fora.n + ' — a página cobre ' +
-             GN.indice.size + ' dos ' + M.total + ' municípios.',
+      peso: (topo.pleno && topo.forte) ? 126 : (topo.forte ? 70 : 66),
+      titulo: topo.nome,
+      curta: 'Ainda não há entrega listada em ' + topo.nome + ' — a página cobre ' +
+             GN.indice.size + ' dos ' + (M ? M.total : GN.indice.size) + ' municípios.',
       detalhe: 'Isso não quer dizer que nada chegou lá. O levantamento de emendas por ' +
                'município ainda não foi feito.',
       chips: ['E as emendas?', 'Ver no mapa'],
@@ -196,6 +306,7 @@
     if (!M) { return null; }
     var leis = M.itens.filter(function (i) { return i.chave === 'leis'; })[0];
     return {
+      peso: 76,
       titulo: null,
       curta: (leis ? leis.valor + ' leis de autoria' : 'Atividade parlamentar') +
              ' em ' + M.mandatos + ' mandatos na Assembleia.',
@@ -221,6 +332,7 @@
     var ultima = D.votos[D.votos.length - 1];
     var v = um || ultima;
     return {
+      peso: 74,
       titulo: null,
       curta: v.valor + ' votos em ' + v.ano + '. ' + v.legenda,
       entrada: v,
@@ -241,6 +353,7 @@
   function emendas(q) {
     if (!/\bemenda/.test(q)) { return null; }
     return {
+      peso: 73,
       titulo: null,
       curta: 'O levantamento de emendas por município ainda não foi feito — por isso não há ' +
              'valor de emenda nesta página.',
@@ -252,15 +365,27 @@
   }
 
   function pauta(q) {
-    var achou = null;
+    /* Casa pelo nome E pelos sinônimos que o gabinete escreveu no dado —
+       "trator" e "patrol" não estão em "Máquina no Chão". */
+    var fs = fichas(q);
+    var achou = null, melhorP = 0;
     D.pautas.forEach(function (p) {
-      if (achou) { return; }
-      var termos = chave(p.nome).split(/[^a-z0-9]+/).filter(function (t) { return t.length >= 4; });
-      if (termos.some(function (t) { return q.indexOf(t) !== -1; })) { achou = p; }
+      var termos = chave(p.nome).split(/[^a-z0-9]+/).filter(function (t) { return t.length >= 4; })
+        .concat((p.sinonimos || []).map(chave));
+      var pontos = 0;
+      termos.forEach(function (t) {
+        if (!t) { return; }
+        if (q.indexOf(t) !== -1) { pontos += 2; return; }
+        if (t.length >= 5 && fs.some(function (f) { return f.length >= 4 && t.indexOf(f) === 0; })) { pontos += 1; }
+      });
+      if (pontos > melhorP) { melhorP = pontos; achou = p; }
     });
     if (!achou) { return null; }
     var ligadas = D.entregas.filter(function (e) { return e.publicar && e.pauta === achou.id; });
     return {
+      /* A pauta ganha da entrega quando a pergunta é uma palavra de tema:
+         quem digita "saude" quer a pauta, não o cartão do SAMU. */
+      peso: 70 + melhorP * 2,
       titulo: achou.nome,
       curta: achou.promessa,
       lista: ligadas.length ? ligadas : null,
@@ -276,6 +401,7 @@
     }
     var M = window.MAPA_PI;
     return {
+      peso: 71,
       titulo: null,
       curta: GN.indice.size + ' dos ' + (M ? M.total : D.legal.uf) +
              ' municípios do Piauí têm entrega listada aqui, com fonte.',
@@ -286,14 +412,50 @@
   }
 
   function quemE(q) {
-    if (!/\b(quem e o|quem e ele|biografia|trajetoria|historia|idade|quantos anos|partido|cargo|candidato a|concorre|numero dele)/.test(q)) {
+    if (!/\b(quem e o|quem e ele|quem e georgiano|biografia|trajetoria|historia|idade|quantos anos|partido|cargo|candidato a|concorre|numero dele|fala do|sobre ele)/.test(q)) {
       return null;
     }
     var L = D.legal;
+    var M = D.mandato;
+    var ultima = D.votos[D.votos.length - 1];
     return {
+      peso: 80,
       titulo: null,
-      curta: 'Candidato a ' + L.cargo + ' pelo ' + L.partido + ' no ' + L.uf + '. Número ' + L.numero + '.',
-      chips: ['Quantas leis ele fez?', 'Quantos votos ele teve?', 'O que chegou na minha cidade?']
+      curta: L.nome + ', ' + (M ? M.mandatos + ' mandatos na Assembleia' : '') +
+             '. Candidato a ' + L.cargo + ' pelo ' + L.partido + ', número ' + L.numero + '.',
+      detalhe: ultima ? ultima.valor + ' votos em ' + ultima.ano + '. ' + ultima.legenda : null,
+      entrada: ultima,
+      chips: ['Quantas leis ele fez?', 'Quais são as propostas?', 'O que chegou na minha cidade?'],
+      saida: function (alvo) {
+        acao(alvo, 'Ler a biografia', function () {
+          fechar();
+          var sec = document.getElementById('quem');
+          if (sec) { sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        });
+      }
+    };
+  }
+
+  /* "quais são as propostas dele" não casava com nada, com cinco compromissos
+     na página. É a pergunta genérica que resume a seção inteira. */
+  function propostas(q) {
+    if (!/\b(proposta|plano|compromisso|o que ele quer|o que pretende|bandeira|prioridade)/.test(q)) {
+      return null;
+    }
+    return {
+      peso: 75,
+      titulo: 'As cinco pautas',
+      curta: D.pautas.length + ' compromissos nomeados para o próximo mandato.',
+      lista: null,
+      chips: D.pautas.slice(0, 3).map(function (p) { return p.nome; }),
+      saida: function (alvo) {
+        D.pautas.forEach(function (p) {
+          var it = el('div', 'msg-item');
+          it.appendChild(el('b', null, p.nome));
+          it.appendChild(el('p', null, p.promessa));
+          alvo.appendChild(it);
+        });
+      }
     };
   }
 
@@ -303,6 +465,7 @@
     }
     var vivos = D.canais.filter(function (c) { return c.url; });
     return {
+      peso: 68,
       titulo: null,
       curta: vivos.length
         ? 'Dá para acompanhar em ' + vivos.map(function (c) { return c.rotulo; }).join(' e ') + '.'
@@ -321,6 +484,7 @@
     }
     var prontos = (D.materiais || []).filter(function (m) { return m.modo; });
     return {
+      peso: 66,
       titulo: null,
       curta: prontos.length
         ? 'Dá para baixar ' + prontos.length + ' coisas agora — a moldura ' + D.legal.numero + ' é a principal.'
@@ -343,6 +507,7 @@
       return null;
     }
     return {
+      peso: 72,
       titulo: null,
       curta: 'Isso é posição política, e quem responde é o Georgiano — não eu.',
       chips: ['O que chegou na minha cidade?', 'Quantas leis ele fez?'],
@@ -351,14 +516,16 @@
   }
 
   function demanda(q) {
-    if (!/\b(quero falar|quero pedir|pedir|reclama|demanda|solicit|preciso de|minha rua|meu bairro|buraco|falta|problema|ajuda|sugest)/.test(q)) {
+    if (!/\b(quero falar|quero pedir|pedir|reclama|demanda|solicit|preciso de|minha rua|meu bairro|buraco|problema|ajud|sugest|voluntari|participar|colabora|apoiar|contribuir|fazer parte|entrar no grupo|me inscrev)/.test(q)) {
       return null;
     }
-    return { abrirDemanda: true };
+    return { peso: 92, abrirDemanda: true };
   }
 
-  var ASSUNTOS = [identidade, demanda, opiniao, entrega, municipio, mandato,
-                  votos, emendas, pauta, cobertura, quemE, canais, material];
+  /* A ordem aqui não decide mais nada — o peso decide. Ela só existe para o
+     desempate ser estável quando dois assuntos empatam. */
+  var ASSUNTOS = [identidade, demanda, opiniao, municipio, pauta, propostas,
+                  entrega, mandato, votos, emendas, cobertura, quemE, canais, material];
 
   /* ---------- fluxo de demanda ----------
      Sem servidor, ninguém "recebe" nada sozinho. O que dá para fazer é montar
@@ -371,11 +538,32 @@
     { campo: 'mensagem', p: 'Escreva em uma frase o que você quer dizer ou pedir.' }
   ];
 
+  /* Enquanto não houver canal, NÃO oferecer o fluxo. Pedir nome, cidade e
+     mensagem para entregar um texto na área de transferência é um formulário
+     abandonado no meio: três perguntas ao eleitor e nenhum destino. Custa a
+     pessoa, e responder "o canal ainda não está no ar" custa nada. */
   function botaoDemanda(alvo, rotulo) {
-    acao(alvo, rotulo, abreDemanda);
+    if (zapCanal()) { acao(alvo, rotulo, abreDemanda); return; }
+    var outros = D.canais.filter(function (c) { return c.url; });
+    outros.forEach(function (c) { linkAcao(alvo, 'Falar pelo ' + c.rotulo, c.url); });
+  }
+
+  function semCanal() {
+    var outros = D.canais.filter(function (c) { return c.url; });
+    /* Isto NAO e fallback: e resposta. Marcar como "nao entendi" faria a
+       prova — e quem le — confundir uma coisa com a outra. */
+    var b = bolha('bot');
+    b.appendChild(el('p', 'msg-curta', outros.length
+      ? 'O canal de mensagens do gabinete ainda não está no ar. Por enquanto dá para falar pelo ' +
+        outros.map(function (c) { return c.rotulo; }).join(' e ') + '.'
+      : 'O canal de mensagens do gabinete ainda não está no ar. Volte em breve.'));
+    outros.forEach(function (c) { linkAcao(b, 'Abrir o ' + c.rotulo, c.url); });
+    chips(sugestoes());
+    rolar();
   }
 
   function abreDemanda() {
+    if (!zapCanal()) { semCanal(); return; }
     fluxo = 0; rascunho = {};
     chips([]);
     var b = bolha('bot');
@@ -491,6 +679,10 @@
       var r = fn(q);
       if (r) { achados.push(r); }
     });
+    /* Quem lidera é o de maior peso, não o primeiro da lista. Antes o bloco
+       "você também perguntou sobre" recebia sistematicamente a MELHOR
+       correspondência, porque a ordem do array decidia. */
+    achados.sort(function (a, b) { return (b.peso || 0) - (a.peso || 0); });
 
     if (!achados.length) {
       /* Ruído ou pergunta fora do escopo. Curto, e com uma saída — não o

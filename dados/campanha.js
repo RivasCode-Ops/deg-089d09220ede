@@ -33,6 +33,7 @@
         'O rodapé aparece em duas grafias no feed: 68.289.770/0001-30 nos posts de 28-29/08 e ' +
         '63/289.770/0001-30 nos de 24-27/08. Pode ser erro na peça ou truncamento de OCR do Instagram — ' +
         'não dá para distinguir pela página. Abrir os posts de 24, 25 e 27/08 ampliados e conferir no DivulgaCand/TSE.',
+      nome: 'Georgiano Fernandes Lima Neto',
       partido: 'Partido Social Democrático – PSD',
       numero: '5555',
       cargo: 'Deputado Federal',
@@ -148,15 +149,25 @@
       }
     ],
 
+    /* Os `sinonimos` de cada pauta são a palavra que o ELEITOR digita, não o
+     * nome que a pauta tem. Ninguém escreve "máquina no chão": escreve trator,
+     * patrol, motoniveladora. Ficam aqui, e não em regex dentro do assistente,
+     * porque quem sabe como se fala em Jaicós é o gabinete — e acrescentar uma
+     * palavra tem de ser uma linha de dado, não uma alteração de código.
+     *
+     * Vieram de um teste real com 19 consultas em 02/09/2026: "trator" e
+     * "propostas" não casavam com nada, tendo pauta e entrega na página.
+     */
+
     /* As cinco pautas nomeadas. Aqui são compromissos — promessa não precisa
      * de prova de entrega; por isso "Água Todo Dia" fica nesta lista mesmo
      * travada na série de conteúdo, onde ela reivindicaria entrega. */
     pautas: [
-      { id: 'maquina-no-chao',           nome: 'Máquina no Chão',              promessa: 'Trator, motoniveladora e pá carregadeira em município que hoje depende de favor para limpar uma estrada.' },
-      { id: 'saude-que-chega',           nome: 'Saúde que Chega',              promessa: 'Ambulância, odonto móvel e van de paciente no município — porque saúde que obriga a viajar 200 km não é saúde.' },
-      { id: 'estrada-de-producao',       nome: 'Estrada de Produção',          promessa: 'Asfalto e estrada vicinal ligando o povoado à cidade — não a obra bonita da avenida, a estrada que o caminhão usa.' },
-      { id: 'agua-todo-dia',             nome: 'Água Todo Dia',                promessa: 'Poço, adutora e dessalinizador para o semiárido piauiense — água na torneira, não caminhão-pipa em ano de eleição.' },
-      { id: 'primeiro-emprego-interior', nome: 'Primeiro Emprego do Interior', promessa: 'Qualificação e primeiro emprego para o jovem que hoje só tem duas opções: sair da cidade ou ficar parado.' }
+      { id: 'maquina-no-chao', sinonimos: ['trator', 'tratores', 'maquina', 'maquinas', 'patrol', 'motoniveladora', 'retroescavadeira', 'carregadeira', 'mecanizacao', 'agricola', 'lavoura'],           nome: 'Máquina no Chão',              promessa: 'Trator, motoniveladora e pá carregadeira em município que hoje depende de favor para limpar uma estrada.' },
+      { id: 'saude-que-chega', sinonimos: ['saude', 'posto', 'ambulancia', 'samu', 'medico', 'hospital', 'odonto', 'dentista', 'upa', 'remedio', 'consulta'],           nome: 'Saúde que Chega',              promessa: 'Ambulância, odonto móvel e van de paciente no município — porque saúde que obriga a viajar 200 km não é saúde.' },
+      { id: 'estrada-de-producao', sinonimos: ['estrada', 'asfalto', 'asfaltamento', 'rodovia', 'vicinal', 'pavimenta', 'ponte', 'caminho', 'poeira', 'buraco'],       nome: 'Estrada de Produção',          promessa: 'Asfalto e estrada vicinal ligando o povoado à cidade — não a obra bonita da avenida, a estrada que o caminhão usa.' },
+      { id: 'agua-todo-dia', sinonimos: ['agua', 'poco', 'adutora', 'dessalinizador', 'cisterna', 'pipa', 'seca', 'torneira', 'abastecimento'],             nome: 'Água Todo Dia',                promessa: 'Poço, adutora e dessalinizador para o semiárido piauiense — água na torneira, não caminhão-pipa em ano de eleição.' },
+      { id: 'primeiro-emprego-interior', sinonimos: ['emprego', 'trabalho', 'jovem', 'juventude', 'qualificacao', 'curso', 'estagio', 'primeiro emprego'], nome: 'Primeiro Emprego do Interior', promessa: 'Qualificação e primeiro emprego para o jovem que hoje só tem duas opções: sair da cidade ou ficar parado.' }
     ],
 
     /* ---------------------------------------------------------------
@@ -189,8 +200,8 @@
      * qual foto pedir ao fotógrafo, nunca a fonte do arquivo do site.
      * ------------------------------------------------------------- */
     fotos: [
-      { slot: 'hero', arquivo: 'img/_candidatas/hero.jpg', acervo: true, origem: 'acervo',
-        provisoria: 'Retrato oficial SEM EXIF. O arquivo veio 700×429 com tarja branca nas laterais; recortado na janela medida, sobram 309×429 de conteúdo. O slot pede 1400px de largura. Entra só na degustação.',
+      { slot: 'hero', arquivo: 'img/_candidatas/hero-arte.jpg', poster: true, acervo: true, origem: 'acervo',
+        provisoria: 'Arte de campanha 480×853, sem EXIF. Entra inteira, como cartaz — o lockup queimado nela repete o logo do topo. Entra só na degustação.',
         titulo: 'Retrato oficial de campanha, sem o lockup',
         descricao: 'Camisa azul clara, fundo azul com a faixa em degradê verde/amarelo. A arte que circula ' +
                    'traz "GEORGIANO 5555 / CONFIANÇA PARA FAZER ACONTECER" queimado embaixo — no hero isso ' +

@@ -94,6 +94,10 @@
          aguenta, parece decisão — e é a única honesta enquanto o original
          não chega. */
       if (f.mini) { caixa.classList.add('ph-mini'); }
+      /* Cartaz: a arte de campanha e uma composicao 9:16 inteira, com lockup e
+         numero. Recortar para preencher a caixa corta justamente o 5555, que e
+         o motivo de ela estar no hero. Entra contida, sobre a cor da marca. */
+      if (f.poster) { caixa.classList.add('ph-poster'); }
       caixa.appendChild(img);
       /* Foto provisória sem tarja é foto aprovada aos olhos de quem abre a
          degustação — e é assim que imagem de referência vira imagem publicada
